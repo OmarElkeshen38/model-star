@@ -1,0 +1,16 @@
+{
+    "nav": {
+        "home": "Home",
+        "shop": "Shop",
+        "cart": "Cart",
+        "orders": "My Orders",
+        "about": "About Us",
+        "contact": "Contact",
+        "login": "Login",
+        "register": "Register",
+        "language": {
+            "en": "English",
+            "ar": "Arabic"
+        }
+    }
+}
