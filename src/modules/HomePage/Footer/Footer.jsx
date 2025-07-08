@@ -5,53 +5,63 @@ import { Link } from 'react-router-dom';
 
 function Footer() {
 
-    const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   return (
-     <footer className="text-gray-300 px-6 md:px-12 pt-12 pb-6">
-      <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 text-sm">
+    <footer className="bg-gray-900 text-gray-200 py-10 t-16">
+      <div className="container mx-auto px-4 grid md:grid-cols-4 gap-8 text-sm">
 
-        <div className='flex flex-col justify-center'>
-          <img src={logo} alt={t('footer.logoAlt')} className="w-32 mb-4" />
-        </div>
-
+        {/* Logo & About */}
         <div>
-          <h2 className="text-white font-semibold text-lg md:text-xl mb-4">{t('footer.title')}</h2>
-          <ul className="space-y-2">
-            <li><Link to="/" className="hover:text-emerald-400 transition-colors">{t('footer.links.home')}</Link></li>
-            <li><Link to="/about" className="hover:text-emerald-400 transition-colors">{t('footer.links.about')}</Link></li>
-            <li><Link to="/services" className="hover:text-emerald-400 transition-colors">{t('footer.links.services')}</Link></li>
-            <li><Link to="/contact" className="hover:text-emerald-400 transition-colors">{t('footer.links.contact')}</Link></li>
-          </ul>
-        </div>
-
-        <div>
-          <h3 className="text-white font-semibold text-lg md:text-xl mb-4">{t('footer.contactTitle')}</h3>
-          <ul className="space-y-2">
-            <li>
-              <a dir="ltr" href="tel:+05367933334" className="hover:text-emerald-400 transition-colors">
-                {t('contact.phone')}
-              </a>
-            </li>
-            <li>
-              <a href="mailto:info@c3.com.sa" className="hover:text-emerald-400 transition-colors">
-                {t('contact.email')}
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <h3 className="text-white font-semibold text-lg md:text-xl mb-4">{t('footer.addressTitle')}</h3>
-          <p className="leading-relaxed">
-            {t('footer.address')}
+          <h2 className="text-xl font-bold text-white mb-2">ModelStar</h2>
+          <p className="text-gray-400">
+            {i18n.language === "ar"
+              ? "متجرك المفضل لكل ما هو عصري وأنيق"
+              : "Your favorite store for all things stylish."}
           </p>
+        </div>
+
+        {/* Links */}
+        <div>
+          <h3 className="text-white font-semibold mb-3">{t("nav.shop")}</h3>
+          <ul className="space-y-2">
+            <li><Link to="/shop" className="hover:underline">{t("nav.shop")}</Link></li>
+            <li><Link to="/cart" className="hover:underline">{t("nav.cart")}</Link></li>
+            <li><Link to="/my-orders" className="hover:underline">{t("nav.orders")}</Link></li>
+          </ul>
+        </div>
+
+        {/* Info */}
+        <div>
+          <h3 className="text-white font-semibold mb-3">{t("nav.about")}</h3>
+          <ul className="space-y-2">
+            <li><Link to="/about" className="hover:underline">{t("nav.about")}</Link></li>
+            <li><Link to="/contact" className="hover:underline">{t("nav.contact")}</Link></li>
+            <li><Link to="/privacy" className="hover:underline"> {i18n.language === "ar" ? "سياسة الخصوصية" : "Privacy Policy"}</Link></li>
+            <li><Link to="/returns" className="hover:underline"> {i18n.language === "ar" ? "سياسة الاسترجاع" : "Return Policy"}</Link></li>
+          </ul>
+        </div>
+
+        {/* Subscribe */}
+        <div>
+          <h3 className="text-white font-semibold mb-3">
+            {i18n.language === "ar" ? "سجل الان وابدا التسوق" : "Register now and start shopping"}
+          </h3>
+          <form className="flex flex-col space-y-3">
+            <input
+              type="email"
+              placeholder={i18n.language === "ar" ? "أدخل بريدك الإلكتروني" : "Enter your email"}
+              className="px-3 py-2 rounded bg-gray-800 text-white border border-gray-700 focus:outline-none"
+            />
+            <button className="bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded transition">
+              {i18n.language === "ar" ? "اشترك" : "Subscribe"}
+            </button>
+          </form>
         </div>
       </div>
 
-      {/* خط فاصل */}
-      <div className="border-t border-gray-700 mt-10 pt-4 text-center text-sm text-gray-500">
-        &copy; {new Date().getFullYear()} CODE 3 LOGISTICS. {t('footer.rights')}
+      <div className="mt-10 text-center text-gray-500 text-xs">
+        &copy; {new Date().getFullYear()} ModelStar. {i18n.language === "ar" ? "جميع الحقوق محفوظة" : "All rights reserved"}.
       </div>
     </footer>
   )
