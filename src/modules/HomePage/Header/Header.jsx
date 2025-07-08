@@ -1,9 +1,8 @@
-import { useTranslation } from 'react-i18next';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import styles from './Header.module.css';
 import shoppingImg from '../../../assets/shopping-img.svg';
-import Navbar from '../Navbar/Navbar';
-import { Link } from 'react-router-dom';
 
 function Header() {
 
