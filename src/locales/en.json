@@ -1,16 +1,43 @@
 {
-    "nav": {
-        "home": "Home",
-        "shop": "Shop",
-        "cart": "Cart",
-        "orders": "My Orders",
-        "about": "About Us",
-        "contact": "Contact",
-        "login": "Login",
-        "register": "Register",
-        "language": {
-            "en": "English",
-            "ar": "Arabic"
-        }
+  "nav": {
+    "home": "Home",
+    "shop": "Shop",
+    "cart": "Cart",
+    "orders": "My Orders",
+    "about": "About Us",
+    "contact": "Contact",
+    "login": "Login",
+    "register": "Register",
+    "language": {
+      "en": "English",
+      "ar": "Arabic"
     }
+  },
+  "home": {
+    "hero": {
+      "title": "Discover Top Products at Competitive Prices",
+      "subtitle": "Shop now from a wide selection of high-quality products.",
+      "cta": "Start Shopping"
+    },
+    "features": {
+      "title": "Why Choose Us?",
+      "quality": "Guaranteed Quality",
+      "qualityDesc": "Our products are carefully selected and meet high standards.",
+      "delivery": "Fast Delivery",
+      "deliveryDesc": "We deliver your orders quickly and on time anywhere.",
+      "easyShopping": "Easy Shopping",
+      "easyShoppingDesc": "A simple and smooth interface makes shopping enjoyable.",
+      "trust": "Customer Trust",
+      "trustDesc": "Trusted by thousands of customers in the Arab world."
+    },
+    "featured": {
+      "title": "Best Sales",
+      "details": "View Details"
+    },
+    "cta": {
+      "title": "Ready to Start?",
+      "subtitle": "Join us now and start your journey in the eCommerce world.",
+      "button": "Create Account"
+    }
+  }
 }
