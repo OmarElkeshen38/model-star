@@ -21,7 +21,7 @@ export default function Navbar() {
 
 
   return (
-    <nav className="bg-white shadow-md px-6 py-6 sticky top-0 z-50">
+    <nav className="bg-gray-100 shadow-md px-6 py-6 sticky top-0 z-50">
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo */}
         <Link to="/" className="text-2xl font-bold text-indigo-600">
@@ -107,8 +107,16 @@ export default function Navbar() {
           {/* Cart Icon */}
           <Link
             to="/login"
-            className="relative text-white bg-indigo-600 hover:bg-indigo-700 px-2 py-2 rounded-full transition"
+            className="relative text-indigo-600 hover:text-indigo-700 hover:border-indigo-600 hover:bg-indigo-100 px-2 py-2 rounded-full transition"
             title={t("nav.cart")}
+          >
+            <ShoppingCart />
+          </Link>
+
+          <Link
+            to="/login"
+            className="relative text-white bg-indigo-600 hover:bg-indigo-700 px-2 py-2 rounded-full transition"
+            title={t("nav.login")}
           >
             <User />
           </Link>
