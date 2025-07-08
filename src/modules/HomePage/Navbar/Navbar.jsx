@@ -1,15 +1,9 @@
 import React, { useEffect } from 'react'
 import { useState } from "react";
-import {
-  NavLink
-
-
-
-
-
-  , Link
-} from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { ShoppingCart, ShieldCheck, Truck, ThumbsUp, User } from "lucide-react";
+
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -100,6 +94,7 @@ export default function Navbar() {
 
         {/* Auth + Language */}
         <div className="hidden md:flex space-x-4 items-center">
+          {/* Language Switch */}
           <select
             className="cursor-pointer text-gray-800 border-none rounded-md px-2 py-1 text-sm focus:outline-none"
             value={i18n.language}
@@ -108,17 +103,14 @@ export default function Navbar() {
             <option className="bg-gray-700 text-white" value="en">English</option>
             <option className="bg-gray-700 text-white" value="ar">العربية</option>
           </select>
+
+          {/* Cart Icon */}
           <Link
             to="/login"
-            className="text-sm text-gray-600 hover:text-indigo-600 transition"
+            className="relative text-white bg-indigo-600 hover:bg-indigo-700 px-2 py-2 rounded-full transition"
+            title={t("nav.cart")}
           >
-            {t("nav.login")}
-          </Link>
-          <Link
-            to="/register"
-            className="text-sm text-white bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded transition"
-          >
-            {t("nav.register")}
+            <User />
           </Link>
 
         </div>
