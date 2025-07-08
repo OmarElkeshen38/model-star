@@ -10,8 +10,7 @@ function Header() {
   const { t, i18n } = useTranslation();
 
   return (
-    <div className="bg-gray-50 text-gray-800">
-      {/* Hero Section */}
+    <div className="bg-gray-100 text-gray-800">
       <section className="min-h-screen flex flex-col md:flex-row items-center justify-between container mx-auto px-6 py-16 gap-10">
         <div className="flex-1 space-y-6 text- ">
           <h1 className="text-4xl md:text-5xl font-bold leading-tight text-indigo-700">
