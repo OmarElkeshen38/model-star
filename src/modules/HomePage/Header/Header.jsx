@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import React from 'react';
 import styles from './Header.module.css';
-// import globalImg from '../../../assets/global_gray900.png';
+import shoppingImg from '../../../assets/shopping-img.svg';
 import Navbar from '../Navbar/Navbar';
 import { Link } from 'react-router-dom';
 
@@ -29,7 +29,7 @@ function Header() {
 
         <div className="flex-1">
           <img
-            src="/assets/hero-shopping.svg"
+            src={shoppingImg}
             alt="Shopping Illustration"
             className="w-full max-w-md mx-auto"
           />
