@@ -10,7 +10,6 @@ function Cta() {
     <section className="py-20 bg-gradient-to-b from-indigo-100 via-white to-gray-100 text-gray-900">
       <div className="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-10">
         
-        {/* الصورة */}
         <div className="flex-1 animate-float">
           <img
             src={subscriberImg}
@@ -19,7 +18,6 @@ function Cta() {
           />
         </div>
 
-        {/* النص والدعوة */}
         <div className="flex-1 space-y-6">
           <h2 className="text-3xl md:text-4xl font-bold text-indigo-700 leading-snug">
             {t("home.cta.title", "جاهز للانطلاق؟")}

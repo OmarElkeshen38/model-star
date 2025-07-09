@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from '../../../assets/logo.png';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
@@ -8,20 +7,14 @@ function Footer() {
   const { t, i18n } = useTranslation();
 
   return (
-    <footer className="bg-gray-900 text-gray-200 py-10 t-16">
+    <footer className="bg-gray-800 text-gray-200 py-10 t-16">
       <div className="container mx-auto px-4 grid md:grid-cols-4 gap-8 text-sm">
 
-        {/* Logo & About */}
         <div>
-          <h2 className="text-xl font-bold text-white mb-2">ModelStar</h2>
-          <p className="text-gray-400">
-            {i18n.language === "ar"
-              ? "متجرك المفضل لكل ما هو عصري وأنيق"
-              : "Your favorite store for all things stylish."}
-          </p>
+          <h2 className="text-3xl font-bold text-white mb-2">ModelStar</h2>
+          
         </div>
 
-        {/* Links */}
         <div>
           <h3 className="text-white font-semibold mb-3">{t("nav.shop")}</h3>
           <ul className="space-y-2">
@@ -31,7 +24,6 @@ function Footer() {
           </ul>
         </div>
 
-        {/* Info */}
         <div>
           <h3 className="text-white font-semibold mb-3">{t("nav.about")}</h3>
           <ul className="space-y-2">
@@ -42,7 +34,6 @@ function Footer() {
           </ul>
         </div>
 
-        {/* Subscribe */}
         <div>
           <h3 className="text-white font-semibold mb-3">
             {i18n.language === "ar" ? "سجل الان وابدا التسوق" : "Register now and start shopping"}

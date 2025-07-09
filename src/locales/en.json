@@ -48,5 +48,20 @@
       "subtitle": "Join us now and start your journey in the world of online shopping.",
       "button": "Create Account"
     }
+  },
+  "promo": {
+    "freeShipping": "Free shipping on orders over 1500 EGP",
+    "discount": "10% off your first order"
+  },
+  "footer": {
+    "about": "Your favorite store for all things stylish.",
+    "shopLinks": "Shop",
+    "infoLinks": "Info",
+    "privacy": "Privacy Policy",
+    "returns": "Return Policy",
+    "subscribeTitle": "Register now and start shopping",
+    "emailPlaceholder": "Enter your email",
+    "subscribeBtn": "Subscribe",
+    "copyright": "All rights reserved"
   }
 }

@@ -26,7 +26,7 @@ function Header() {
           </Link>
         </div>
 
-        <div className="flex-1">
+        <div className="flex-1 animate-float">
           <img
             src={shoppingImg}
             alt="Shopping Illustration"

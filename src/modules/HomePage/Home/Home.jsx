@@ -8,6 +8,7 @@ import Cta from '../Cta/Cta'
 import FeaturedProducts from '../FeaturedProducts/FeaturedProducts'
 import CategoriesSlider from '../CategoriesSlider/CategoriesSlider'
 import ExclusiveOffers from '../ExclusiveOffers/ExclusiveOffers'
+import PromoBanner from '../PromoBanner/PromoBanner'
 
 function Home() {
     return (
@@ -16,6 +17,7 @@ function Home() {
             <CategoriesSlider />
             <FeaturedProducts />
             <ExclusiveOffers />
+            <PromoBanner />
             <Features />
             <Cta />
         </>
