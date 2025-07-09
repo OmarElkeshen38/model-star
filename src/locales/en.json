@@ -1,13 +1,20 @@
 {
   "nav": {
     "home": "Home",
-    "shop": "Shop",
+    "shop": "Categories",
     "cart": "Cart",
     "orders": "My Orders",
     "about": "About Us",
     "contact": "Contact",
-    "login": "Login",
-    "register": "Register",
+    "login": "Login"
+  },
+  "categories": {
+    "mens-shoes": "Men's Shoes",
+    "womens-shoes": "Women's Shoes",
+    "kids-shoes": "Kids' Shoes",
+    "sport": "Sports"
+  },
+  "common": {
     "language": {
       "en": "English",
       "ar": "Arabic"
@@ -15,28 +22,28 @@
   },
   "home": {
     "hero": {
-      "title": "Discover Top Products at Competitive Prices",
-      "subtitle": "Shop now from a wide selection of high-quality products.",
+      "title": "Discover the best products at competitive prices",
+      "subtitle": "Shop now from a wide range of high-quality products with exceptional service.",
       "cta": "Start Shopping"
     },
     "features": {
       "title": "Why Choose Us?",
       "quality": "Guaranteed Quality",
-      "qualityDesc": "Our products are carefully selected and meet high standards.",
+      "qualityDesc": "Our products are carefully selected and meet the highest quality standards.",
       "delivery": "Fast Delivery",
-      "deliveryDesc": "We deliver your orders quickly and on time anywhere.",
-      "easyShopping": "Easy Shopping",
+      "deliveryDesc": "We deliver your orders quickly and on time to any location.",
+      "easyShopping": "Easy Shopping Experience",
       "easyShoppingDesc": "A simple and smooth interface makes shopping enjoyable.",
       "trust": "Customer Trust",
-      "trustDesc": "Trusted by thousands of customers in the Arab world."
+      "trustDesc": "Trusted by thousands of customers across the Arab world."
     },
     "featured": {
-      "title": "Best Sales",
+      "title": "Best Sellers",
       "details": "View Details"
     },
     "cta": {
-      "title": "Ready to Start?",
-      "subtitle": "Join us now and start your journey in the eCommerce world.",
+      "title": "Ready to get started?",
+      "subtitle": "Join us now and start your journey in the world of online shopping.",
       "button": "Create Account"
     }
   }

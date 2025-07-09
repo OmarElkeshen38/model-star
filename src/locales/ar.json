@@ -6,8 +6,15 @@
     "orders": "طلباتي",
     "about": "من نحن",
     "contact": "اتصل بنا",
-    "login": "تسجيل الدخول",
-    "register": "إنشاء حساب",
+    "login": "تسجيل الدخول"
+  },
+  "categories": {
+    "mens-shoes": "أحذية رجالي",
+    "womens-shoes": "أحذية نسائي",
+    "kids-shoes": "أحذية أطفال",
+    "sport": "رياضية"
+  },
+  "common": {
     "language": {
       "en": "الإنجليزية",
       "ar": "العربية"

@@ -1,28 +1,27 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import styles from './Header.module.css';
 import shoppingImg from '../../../assets/shopping-img.svg';
 
 function Header() {
-
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   return (
-    <div className="bg-white text-gray-900">
-      <section className="min-h-screen flex flex-col md:flex-row items-center justify-between container mx-auto px-6 py-16 gap-10">
-        <div className="flex-1 space-y-6 text- ">
-          <h1 className="text-4xl md:text-5xl font-bold leading-tight text-indigo-700">
-            {t("home.hero.title", "اكتشف أفضل المنتجات بأسعار منافسة")}
+    <div className="bg-gradient-to-br from-indigo-50 via-white to-gray-100 text-gray-900">
+      <section className="min-h-screen flex flex-col-reverse md:flex-row items-center justify-between container mx-auto px-6 py-20 gap-10">
+
+        <div className="flex-1 space-y-6 ">
+          <h1 className="text-4xl md:text-5xl font-extrabold leading-tight text-indigo-700">
+            {t("home.hero.title")}
           </h1>
-          <p className="text-lg text-gray-600">
-            {t("home.hero.subtitle", "تسوّق الآن من مجموعة واسعة من المنتجات بجودة عالية وخدمة مميزة.")}
+          <p className="text-lg md:text-xl text-gray-700">
+            {t("home.hero.subtitle")}
           </p>
           <Link
             to="/shop"
-            className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg text-lg font-medium transition"
+            className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-lg text-lg font-medium shadow-md transition duration-300 animate-pulse-once"
           >
-            {t("home.hero.cta", "ابدأ التسوق")}
+            {t("home.hero.cta")}
           </Link>
         </div>
 
@@ -30,13 +29,12 @@ function Header() {
           <img
             src={shoppingImg}
             alt="Shopping Illustration"
-            className="w-full max-w-md mx-auto"
+            className="w-full max-w-md mx-auto drop-shadow-md animate-float animate-fade-in"
           />
         </div>
       </section>
-      </div>
-
-  )
+    </div>
+  );
 }
 
-export default Header
+export default Header;

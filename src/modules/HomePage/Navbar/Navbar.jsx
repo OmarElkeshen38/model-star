@@ -3,28 +3,22 @@ import { useTranslation } from 'react-i18next';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { ChevronDown, ShoppingCart, User } from 'lucide-react';
 
-const categories = [
-  { name: 'أحذية رجالي', slug: 'mens-shoes' },
-  { name: 'أحذية نسائي', slug: 'womens-shoes' },
-  { name: 'أحذية أطفال', slug: 'kids-shoes' },
-  { name: 'رياضية', slug: 'sport' }
-];
-
 function Navbar() {
   const { t, i18n } = useTranslation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [cartCount, setCartCount] = useState(3); // Later: replace with context
+  const [cartCount, setCartCount] = useState(3); // تستبدل لاحقًا بـ context أو state عام
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
+  // إعداد اتجاه اللغة
   useEffect(() => {
     const dir = i18n.language === 'ar' ? 'rtl' : 'ltr';
     document.documentElement.dir = dir;
     document.documentElement.lang = i18n.language;
   }, [i18n.language]);
 
-  // Close dropdown if clicked outside
+  // إغلاق القائمة المنسدلة عند النقر بالخارج
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -35,11 +29,16 @@ function Navbar() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const toggleDropdown = () => {
-    setShowDropdown(prev => !prev);
-  };
-
+  const toggleDropdown = () => setShowDropdown(prev => !prev);
   const changeLanguage = (lang) => i18n.changeLanguage(lang);
+
+  // التصنيفات من ملف الترجمة
+  const categories = [
+    { name: t('categories.mens-shoes'), slug: 'mens-shoes' },
+    { name: t('categories.womens-shoes'), slug: 'womens-shoes' },
+    { name: t('categories.kids-shoes'), slug: 'kids-shoes' },
+    { name: t('categories.sport'), slug: 'sport' }
+  ];
 
   return (
     <nav className="bg-white text-gray-900 shadow-md px-6 py-4 fixed left-0 right-0 top-0 z-50">
@@ -55,18 +54,13 @@ function Navbar() {
         <ul className={`flex flex-col md:flex-row md:items-center gap-4 md:gap-6 text-base font-medium absolute md:static top-20 left-0 w-full md:w-auto px-6 md:px-0 py-4 md:py-0 bg-white md:bg-transparent transition-all duration-300 border-t md:border-0 ${menuOpen ? "block" : "hidden md:flex"}`}>
 
           <li>
-            <NavLink
-              to="/"
-              onClick={() => setMenuOpen(false)}
-              className={({ isActive }) =>
-                `relative hover:text-indigo-600 after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-0 hover:after:w-full after:h-0.5 after:bg-indigo-400 after:transition-all after:duration-200 ${isActive ? "text-indigo-600 font-semibold" : ""}`
-              }
-            >
+            <NavLink to="/" onClick={() => setMenuOpen(false)} className={({ isActive }) =>
+              `relative hover:text-indigo-600 after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-0 hover:after:w-full after:h-0.5 after:bg-indigo-400 after:transition-all after:duration-200 ${isActive ? "text-indigo-600 font-semibold" : ""}`}>
               {t('nav.home')}
             </NavLink>
           </li>
 
-          {/* Dropdown */}
+          {/* Dropdown للتصنيفات */}
           <li className="relative" ref={dropdownRef}>
             <button
               onClick={toggleDropdown}
@@ -128,11 +122,12 @@ function Navbar() {
               value={i18n.language}
               onChange={(e) => changeLanguage(e.target.value)}
             >
-              <option value="en">English</option>
-              <option value="ar">العربية</option>
+              <option value="en">{t('common.language.en')}</option>
+              <option value="ar">{t('common.language.ar')}</option>
             </select>
           </li>
 
+          {/* أيقونات المستخدم والسلة */}
           <li className="flex gap-2 items-center">
             <button
               onClick={() => navigate("/auth/login")}
