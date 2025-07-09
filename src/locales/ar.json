@@ -9,10 +9,12 @@
     "login": "تسجيل الدخول"
   },
   "categories": {
-    "mens-shoes": "أحذية رجالي",
-    "womens-shoes": "أحذية نسائي",
-    "kids-shoes": "أحذية أطفال",
-    "sport": "رياضية"
+    "shoes": "أحذية",
+    "watches": "ساعات",
+    "sunglasses": "نظارات",
+    "electronics": "إلكترونيات",
+    "mens-clothing": "ملابس رجالي",
+    "womens-clothing": "ملابس حريمي"
   },
   "common": {
     "language": {
@@ -21,6 +23,7 @@
     }
   },
   "home": {
+    "browseCategories": "تصفح الفئات",
     "hero": {
       "title": "اكتشف أفضل المنتجات بأسعار منافسة",
       "subtitle": "تسوّق الآن من مجموعة واسعة من المنتجات بجودة عالية وخدمة مميزة.",

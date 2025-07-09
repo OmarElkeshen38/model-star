@@ -5,9 +5,10 @@ import shoppingImg from '../../../assets/shopping-img.svg';
 
 function Header() {
   const { t } = useTranslation();
+  const isRTL = document.documentElement.dir === 'rtl';
 
   return (
-    <div className="bg-gradient-to-br from-indigo-50 via-white to-gray-100 text-gray-900">
+    <div className={`text-gray-900 ${isRTL ? 'bg-gradient-to-bl' : 'bg-gradient-to-br'} from-indigo-500 via-white to-gray-100`}>
       <section className="min-h-screen flex flex-col-reverse md:flex-row items-center justify-between container mx-auto px-6 py-20 gap-10">
 
         <div className="flex-1 space-y-6 ">

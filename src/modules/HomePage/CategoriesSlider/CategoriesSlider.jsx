@@ -2,6 +2,7 @@ import React from 'react';
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import { useTranslation } from "react-i18next";
+
 import shoiceImg from '../../../assets/categories/menn.jpg';
 import mennImg from '../../../assets/categories/menn.jpg';
 import womenImg from '../../../assets/categories/women.jpg';
@@ -9,32 +10,34 @@ import sunglasessImg from '../../../assets/categories/sunglasess.jpg';
 import watchsImg from '../../../assets/categories/watchs.png';
 import shoesImg from '../../../assets/categories/shoes.png';
 
-
 function CategoriesSlider() {
     const { t, i18n } = useTranslation();
 
     const categories = [
-        { id: 1, name: i18n.language === "ar" ? "أحذية" : "Shoes", image: shoesImg },
-        { id: 3, name: i18n.language === "ar" ? "ساعات" : "Watches", image: watchsImg },
-        { id: 4, name: i18n.language === "ar" ? "نظارات" : "Sunglasses", image: sunglasessImg },
-        { id: 5, name: i18n.language === "ar" ? "إلكترونيات" : "Electronics", image: shoiceImg },
-        { id: 6, name: i18n.language === "ar" ? "ملابس رجالي" : "Men's Clothing", image: mennImg },
-        { id: 7, name: i18n.language === "ar" ? "ملابس حريمي" : "Women's Clothing", image: womenImg },
+        { id: 1, name: t("categories.shoes"), image: shoesImg },
+        { id: 3, name: t("categories.watches"), image: watchsImg },
+        { id: 4, name: t("categories.sunglasses"), image: sunglasessImg },
+        { id: 5, name: t("categories.electronics"), image: shoiceImg },
+        { id: 6, name: t("categories.mens-clothing"), image: mennImg },
+        { id: 7, name: t("categories.womens-clothing"), image: womenImg },
     ];
 
     return (
-        <section className="py-16 bg-gray-50">
+        <section className="py-20 bg-gray-50">
             <div className="container mx-auto px-4">
-                <h2 className="text-3xl font-bold text-center text-indigo-700 mb-10">
-                    {i18n.language === "ar" ? "تصفح الفئات" : "Browse Categories"}
+                <h2 className="text-3xl md:text-4xl font-bold text-center text-indigo-700 mb-12">
+                    {t("home.browseCategories", "Browse Categories")}
                 </h2>
 
                 <Swiper
+                    key={i18n.language}
+                    rtl={i18n.dir() === 'rtl'}
+                    dir={i18n.dir()}
                     modules={[Navigation, Pagination, Autoplay]}
-                    spaceBetween={15}
+                    spaceBetween={20}
                     slidesPerView={2}
-                    autoplay={{ delay: 3000, disableOnInteraction: false }}
                     loop={true}
+                    autoplay={{ delay: 3000, disableOnInteraction: false }}
                     navigation
                     pagination={{ clickable: true }}
                     breakpoints={{
@@ -45,20 +48,20 @@ function CategoriesSlider() {
                 >
                     {categories.map((cat) => (
                         <SwiperSlide key={cat.id}>
-                            <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition p-4 text-center">
+                            <div className="bg-white cursor-pointer rounded-lg shadow-md hover:shadow-xl transition-transform duration-300 transform hover:scale-105 p-4 text-center animate-fade-in-up">
                                 <img
                                     src={cat.image}
                                     alt={cat.name}
-                                    className="w-full h-60 object-cover rounded-md mb-3"
+                                    className="w-full h-56 object-cover rounded-md mb-4"
                                 />
-                                <h3 className="font-semibold text-gray-800">{cat.name}</h3>
+                                <h3 className="text-gray-800 font-semibold text-lg">{cat.name}</h3>
                             </div>
                         </SwiperSlide>
                     ))}
                 </Swiper>
             </div>
         </section>
-    )
+    );
 }
 
-export default CategoriesSlider
+export default CategoriesSlider;

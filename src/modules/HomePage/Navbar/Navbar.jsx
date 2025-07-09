@@ -7,18 +7,16 @@ function Navbar() {
   const { t, i18n } = useTranslation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [cartCount, setCartCount] = useState(3); // تستبدل لاحقًا بـ context أو state عام
+  const [cartCount, setCartCount] = useState(3);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
-  // إعداد اتجاه اللغة
   useEffect(() => {
     const dir = i18n.language === 'ar' ? 'rtl' : 'ltr';
     document.documentElement.dir = dir;
     document.documentElement.lang = i18n.language;
   }, [i18n.language]);
 
-  // إغلاق القائمة المنسدلة عند النقر بالخارج
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -32,12 +30,10 @@ function Navbar() {
   const toggleDropdown = () => setShowDropdown(prev => !prev);
   const changeLanguage = (lang) => i18n.changeLanguage(lang);
 
-  // التصنيفات من ملف الترجمة
   const categories = [
-    { name: t('categories.mens-shoes'), slug: 'mens-shoes' },
-    { name: t('categories.womens-shoes'), slug: 'womens-shoes' },
-    { name: t('categories.kids-shoes'), slug: 'kids-shoes' },
-    { name: t('categories.sport'), slug: 'sport' }
+    { name: t('categories.shoes'), slug: 'mens-shoes' },
+    { name: t('categories.womens-clothing'), slug: 'womens-clothing' },
+    { name: t('categories.mens-clothing'), slug: 'mens-clothing' },
   ];
 
   return (
@@ -60,7 +56,6 @@ function Navbar() {
             </NavLink>
           </li>
 
-          {/* Dropdown للتصنيفات */}
           <li className="relative" ref={dropdownRef}>
             <button
               onClick={toggleDropdown}
@@ -127,7 +122,6 @@ function Navbar() {
             </select>
           </li>
 
-          {/* أيقونات المستخدم والسلة */}
           <li className="flex gap-2 items-center">
             <button
               onClick={() => navigate("/auth/login")}

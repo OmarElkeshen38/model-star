@@ -9,10 +9,12 @@
     "login": "Login"
   },
   "categories": {
-    "mens-shoes": "Men's Shoes",
-    "womens-shoes": "Women's Shoes",
-    "kids-shoes": "Kids' Shoes",
-    "sport": "Sports"
+    "shoes": "Shoes",
+    "watches": "Watches",
+    "sunglasses": "Sunglasses",
+    "electronics": "Electronics",
+    "mens-clothing": "Men's Clothing",
+    "womens-clothing": "Women's Clothing"
   },
   "common": {
     "language": {
