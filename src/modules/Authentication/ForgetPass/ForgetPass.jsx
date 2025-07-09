@@ -1,88 +1,49 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
-import { AUTH_URLS, publicAxiosInstance } from '../../../Services/Urls/Urls';
-import logo from '../../../assets/logo.png';
-import { getEmailValidation } from '../../../Services/Validations/Validations';
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { Link, useNavigate } from "react-router-dom";
 
 function ForgetPass() {
+  const { t } = useTranslation();
+  let navigate = useNavigate();
 
-  const { t, i18n } = useTranslation();
-  let { register, formState: { errors, isSubmitting }, handleSubmit } = useForm({ mode: "onChange" });
-  const navigate = useNavigate();
-  const emailValidation = getEmailValidation(t);
-
-  const onSubmit = async (data) => {
-    try {
-      let respons = await publicAxiosInstance.post(AUTH_URLS.Forget_Pass, data, {
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-        }
-      });
-      console.log(respons.data);
-
-      localStorage.setItem("token", respons.data.token)
-
-      toast.success(t('forget_pass.sent_success'));
-      navigate("/reset-password")
-
-
-
-    } catch (error) {
-      toast.error(t('forget_pass.sent_error'));
-    }
-  }
+  const goToResetPass = () => {
+    navigate("/auth/reset-password");
+  };
 
   return (
-    <div className="bg-gray-800 shadow-xl rounded-xl p-8 md:p-10 w-full max-w-md relative z-10">
+    <div className="p-8 w-full h-full flex items-center justify-center">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-6">
+          <h2 className="text-2xl font-bold text-gray-800">
+            {t("forgetPass.title", "نسيت كلمة المرور؟")}
+          </h2>
+          <p className="text-sm text-gray-500">
+            {t("forgetPass.subtitle", "أدخل بريدك الإلكتروني لإرسال رابط إعادة التعيين.")}
+          </p>
+        </div>
 
-      <h2 className="text-center text-2xl font-bold text-white mb-6 flex items-center justify-center gap-2">
-        {t('forget_pass.forgot_title')}
-        <i className="fa-solid fa-key text-emerald-400 text-1xl"></i>
-      </h2>
-
-      <div className="flex justify-center mb-6">
-        <img src={logo} alt="CODE 3 LOGISTICS" className="w-32" />
-      </div>
-
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <div>
+        <form className="space-y-4">
           <input
             type="email"
-            id="email"
-            placeholder={t('login.email')}
-            className="w-full bg-gray-700 text-white border border-gray-600 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-400"
-            {...register("email", emailValidation)}
+            placeholder={t("forgetPass.email", "البريد الإلكتروني")}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
-          {errors.email && <span className="text-red-500 text-sm">{errors.email.message}</span>}
-        </div>
-
-        <div className="text-end">
-          <Link
-            to="/login"
-            className="text-sm text-emerald-400 hover:underline"
+          <button
+            onClick={goToResetPass}
+            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-md font-semibold transition"
           >
-            {t('forget_pass.back_to_login')}
+            {t("forgetPass.submit", "إرسال رابط إعادة التعيين")}
+          </button>
+        </form>
+
+        <p className="text-sm text-center text-gray-600 mt-4">
+          <Link to="/auth/login" className="text-indigo-600 hover:underline">
+            {t("forgetPass.backToLogin", "العودة لتسجيل الدخول")}
           </Link>
-        </div>
-
-        <button
-          disabled={isSubmitting}
-          className="cursor-pointer w-full bg-emerald-500 hover:bg-emerald-600 text-white py-2.5 rounded-lg font-semibold transition duration-200"
-        >
-          {isSubmitting ? (
-            <i className="fa-solid fa-spinner fa-spin"></i>
-          ) : (
-            t('forget_pass.submit')
-          )}
-        </button>
-      </form>
+        </p>
+      </div>
     </div>
-  )
-
+  );
 }
 
-export default ForgetPass
+export default ForgetPass;

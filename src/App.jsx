@@ -15,6 +15,7 @@ import NotFound from './modules/Shared/NotFound/NotFound';
 import Login from './modules/Authentication/Login/Login';
 import ForgetPass from './modules/Authentication/ForgetPass/ForgetPass';
 import ResetPass from './modules/Authentication/ResetPass/ResetPass';
+import Register from './modules/Authentication/Register/Register';
 
 function App() {
   const { i18n } = useTranslation();
@@ -42,6 +43,7 @@ function App() {
       errorElement: <NotFound />,
       children: [
         { path: "login", element: <Login /> },
+        { path: "register", element: <Register /> },
         { path: "forget-password", element: <ForgetPass /> },
         { path: "reset-password", element: <ResetPass /> },
       ],

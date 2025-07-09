@@ -26,7 +26,7 @@ function Cta() {
             {t("home.cta.subtitle", "انضم إلينا الآن وابدأ رحلتك في عالم التسوق الإلكتروني.")}
           </p>
           <Link
-            to="/register"
+            to="/auth/register"
             className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-semibold transition duration-300 shadow-md hover:shadow-lg"
           >
             {t("home.cta.button", "إنشاء حساب")}

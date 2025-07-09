@@ -23,19 +23,25 @@
     }
   },
   "home": {
+    "browseCategories": "Browse Categories",
+    "exclusiveOffers": {
+      "title": "Exclusive Offers",
+      "subtitle": "Enjoy the best deals and discounts on selected products.",
+      "viewAll": "View All"
+    },
     "hero": {
-      "title": "Discover the best products at competitive prices",
-      "subtitle": "Shop now from a wide range of high-quality products with exceptional service.",
+      "title": "Discover Top Products at Competitive Prices",
+      "subtitle": "Shop now from a wide range of high-quality products and exceptional service.",
       "cta": "Start Shopping"
     },
     "features": {
       "title": "Why Choose Us?",
       "quality": "Guaranteed Quality",
-      "qualityDesc": "Our products are carefully selected and meet the highest quality standards.",
-      "delivery": "Fast Delivery",
-      "deliveryDesc": "We deliver your orders quickly and on time to any location.",
+      "qualityDesc": "Our products are carefully selected and meet the highest standards.",
+      "delivery": "Fast Shipping",
+      "deliveryDesc": "We deliver your orders quickly and on time, anywhere.",
       "easyShopping": "Easy Shopping Experience",
-      "easyShoppingDesc": "A simple and smooth interface makes shopping enjoyable.",
+      "easyShoppingDesc": "Simple and smooth interface to make shopping enjoyable.",
       "trust": "Customer Trust",
       "trustDesc": "Trusted by thousands of customers across the Arab world."
     },
@@ -44,24 +50,59 @@
       "details": "View Details"
     },
     "cta": {
-      "title": "Ready to get started?",
-      "subtitle": "Join us now and start your journey in the world of online shopping.",
+      "title": "Ready to Get Started?",
+      "subtitle": "Join us now and start your e-commerce journey.",
       "button": "Create Account"
     }
   },
   "promo": {
-    "freeShipping": "Free shipping on orders over 1500 EGP",
-    "discount": "10% off your first order"
+    "freeShipping": "Free shipping on orders over EGP 1500",
+    "discount": "10% off on your first order"
   },
   "footer": {
-    "about": "Your favorite store for all things stylish.",
+    "about": "Your favorite store for everything trendy and stylish.",
     "shopLinks": "Shop",
-    "infoLinks": "Info",
+    "infoLinks": "Information",
     "privacy": "Privacy Policy",
     "returns": "Return Policy",
-    "subscribeTitle": "Register now and start shopping",
+    "subscribeTitle": "Sign up now and start shopping",
     "emailPlaceholder": "Enter your email",
     "subscribeBtn": "Subscribe",
     "copyright": "All rights reserved"
+  },
+  "login": {
+    "login_title": "Log in to Your Account",
+    "description": "Welcome back! Please log in to start shopping.",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Login",
+    "forgotPassword": "Forgot your password?",
+    "home": "Home",
+    "privacy": "Privacy",
+    "terms": "Terms & Conditions",
+    "copyright": "All rights reserved"
+  },
+  "register": {
+    "title": "Create a New Account",
+    "name": "Full Name",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "submit": "Sign Up",
+    "haveAccount": "Already have an account?",
+    "loginLink": "Login"
+  },
+  "forgetPassword": {
+    "title": "Password Recovery",
+    "instruction": "Enter your email to receive a reset link.",
+    "email": "Email",
+    "submit": "Send Reset Link",
+    "backToLogin": "Back to Login"
+  },
+  "resetPassword": {
+    "title": "Reset Your Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "submit": "Reset Password"
   }
 }
