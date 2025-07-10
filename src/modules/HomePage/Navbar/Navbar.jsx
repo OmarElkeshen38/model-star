@@ -124,7 +124,7 @@ function Navbar() {
 
           <li className="flex gap-2 items-center">
             <button
-              onClick={() => navigate("/auth/login")}
+              onClick={() => navigate("/cart")}
               className="relative p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-indigo-600 transition cursor-pointer"
               title={t("nav.cart")}
             >

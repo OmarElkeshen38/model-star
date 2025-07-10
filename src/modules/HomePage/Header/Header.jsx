@@ -18,12 +18,14 @@ function Header() {
           <p className="text-lg md:text-xl text-gray-700">
             {t("home.hero.subtitle")}
           </p>
-          <Link
-            to="/shop"
-            className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-lg text-lg font-medium shadow-md transition duration-300 animate-pulse-once"
-          >
-            {t("home.hero.cta")}
-          </Link>
+          <div className="mt-6">
+                <Link
+                  to="/shop"
+                  className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg text-lg font-medium transition-transform hover:scale-105"
+                >
+                  {t("home.hero.cta", "ابدا التسوق الآن")}
+                </Link>
+              </div>
         </div>
 
         <div className="flex-1 animate-float">
