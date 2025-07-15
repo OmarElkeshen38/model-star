@@ -84,9 +84,9 @@ function Navbar() {
           </li>
 
           <li>
-            <NavLink to="/cart" onClick={() => setMenuOpen(false)} className={({ isActive }) =>
+            <NavLink to="/shop" onClick={() => setMenuOpen(false)} className={({ isActive }) =>
               `relative hover:text-indigo-600 after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-0 hover:after:w-full after:h-0.5 after:bg-indigo-400 after:transition-all after:duration-200 ${isActive ? "text-indigo-600 font-semibold" : ""}`}>
-              {t('nav.cart')}
+              {t('nav.products')}
             </NavLink>
           </li>
 

@@ -41,7 +41,7 @@ function Features() {
               key={index}
               className="group text-center p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition duration-300 animate-fade-in-up"
             >
-              <div className="mb-4">{feature.icon}</div>
+              <div className="mb-4 flex justify-center mb-6">{feature.icon}</div>
               <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
               <p className="text-gray-600 text-sm">{feature.desc}</p>
             </div>

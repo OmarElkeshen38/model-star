@@ -16,6 +16,12 @@ import Login from './modules/Authentication/Login/Login';
 import ForgetPass from './modules/Authentication/ForgetPass/ForgetPass';
 import ResetPass from './modules/Authentication/ResetPass/ResetPass';
 import Register from './modules/Authentication/Register/Register';
+import Cart from './modules/Cart/Cart';
+import Checkout from './modules/Checkout/Checkout';
+import AllProducts from './modules/Products/AllProducts/AllProducts';
+import ContactUs from './modules/ContactUs/ContactUs';
+import AboutUs from './modules/AboutUs/AboutUs';
+import ProductDetails from './modules/Products/ProductDetails/ProductDetails';
 
 function App() {
   const { i18n } = useTranslation();
@@ -35,6 +41,12 @@ function App() {
       errorElement: <NotFound />,
       children: [
         { index: true, element: <Home /> },
+        { path: "cart", element: <Cart /> },
+        { path: "checkout", element: <Checkout /> },
+        { path: "shop", element: <AllProducts /> },
+        { path: "/product/:id", element: <ProductDetails /> },
+        { path: "contact", element: <ContactUs /> },
+        { path: "about", element: <AboutUs /> },
       ],
     },
     {
