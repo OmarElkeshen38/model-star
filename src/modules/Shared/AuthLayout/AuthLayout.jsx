@@ -28,6 +28,7 @@ function AuthLayout() {
 
         <div className="text-xs text-gray-200 text-center mb-4 space-y-1">
           <div className="flex items-center justify-center gap-3">
+            <Link to="/user-profile" className="hover:underline">{t("login.hme", "المستخدم")}</Link>
             <Link to="/" className="hover:underline">{t("login.home", "الرئيسية")}</Link>
             <span>|</span>
             <Link to="/terms" className="hover:underline">{t("login.terms", "الشروط")}</Link>

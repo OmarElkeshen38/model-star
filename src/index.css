@@ -31,6 +31,10 @@ body {
   color: oklch(27.8% 0.033 256.848);
 }
 
+button {
+  cursor: pointer;
+}
+
 
 
 @keyframes floatUpDown {

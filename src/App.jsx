@@ -22,6 +22,9 @@ import AllProducts from './modules/Products/AllProducts/AllProducts';
 import ContactUs from './modules/ContactUs/ContactUs';
 import AboutUs from './modules/AboutUs/AboutUs';
 import ProductDetails from './modules/Products/ProductDetails/ProductDetails';
+import UserProfile from './modules/User/UserProfile/UserProfile';
+import EditProfile from './modules/User/EditProfile/EditProfile';
+import ChangePassword from './modules/User/ChangePassword/ChangePassword';
 
 function App() {
   const { i18n } = useTranslation();
@@ -47,6 +50,9 @@ function App() {
         { path: "/product/:id", element: <ProductDetails /> },
         { path: "contact", element: <ContactUs /> },
         { path: "about", element: <AboutUs /> },
+        { path: "user-profile", element: <UserProfile /> },
+        { path: "/edit-user-data", element: <EditProfile /> },
+        { path: "/edit-user-password", element: <ChangePassword /> },
       ],
     },
     {
