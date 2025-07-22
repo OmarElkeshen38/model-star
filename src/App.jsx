@@ -25,6 +25,12 @@ import ProductDetails from './modules/Products/ProductDetails/ProductDetails';
 import UserProfile from './modules/User/UserProfile/UserProfile';
 import EditProfile from './modules/User/EditProfile/EditProfile';
 import ChangePassword from './modules/User/ChangePassword/ChangePassword';
+import AdminLayout from './modules/Admin/AdminLayout/AdminLayout';
+import AdminDashboard from './modules/Admin/AdminDashboard/AdminDashboard';
+import AdminProducts from './modules/Admin/AdminProducts/AdminProducts';
+import AdminOrders from './modules/Admin/AdminOrders/AdminOrders';
+import AdminUsers from './modules/Admin/AdminUsers/AdminUsers';
+import AdminSettings from './modules/Admin/AdminSettings/AdminSettings';
 
 function App() {
   const { i18n } = useTranslation();
@@ -53,6 +59,17 @@ function App() {
         { path: "user-profile", element: <UserProfile /> },
         { path: "/edit-user-data", element: <EditProfile /> },
         { path: "/edit-user-password", element: <ChangePassword /> },
+        {
+          path: '/admin',
+          element: <AdminLayout />,
+          children: [
+            { index: true, element: <AdminDashboard /> },
+            { path: 'products', element: <AdminProducts /> },
+            { path: 'orders', element: <AdminOrders /> },
+            { path: 'users', element: <AdminUsers /> },
+            { path: 'settings', element: <AdminSettings /> },
+          ],
+        },
       ],
     },
     {
