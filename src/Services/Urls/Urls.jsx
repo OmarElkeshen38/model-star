@@ -1,8 +1,7 @@
 import axios from "axios";
 import Cookies from 'js-cookie';
 
-// export const baseURL="https://api.c3.com.sa/";
-export const baseURL = "https://staging.c3.com.sa/";
+export const baseURL = "https://api.modelstar-eg.com";
 
 export const publicAxiosInstance = axios.create({ baseURL });
 
@@ -25,17 +24,11 @@ privateAxiosInstance.interceptors.request.use((config) => {
 export default privateAxiosInstance;
 
 
-export const AUTH_URLS = {
-    Login: `api/login`,
-    Register: `api/register`,
-    Forget_Pass: `api/forget-password`,
-    Reset_Pass: `api/reset-password`,
-    Change_Pass: `api/change-password`,
+export const PRODUCTS_URLS = {
+    create: `products/create`,
+    display: `products/getproducts`,
+    update: (id) => `products/update/${id}`,
+    delete: (id) => `products/delete/${id}`,
+    product_details: (id) => `products/details/${id}`,
 }
-export const companyStrengthUrls = {
-    daily_attendance: `api/employees/stats/daily_attendance`,
-    by_status: `api/employees/stats/by_status`,
-    totals: `api/employees/stats/totals?filter[status]=working`,
-    hiring: `api/employees/stats/hiring?filter[date_between]=2021-01-01,2026-01-01`,
-    employees: `api/employees/stats`,
-}
+

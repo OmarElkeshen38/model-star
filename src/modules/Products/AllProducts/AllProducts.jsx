@@ -1,25 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import shoseIng from '../../../assets/shoice.jpg';
+import { PRODUCTS_URLS, publicAxiosInstance } from '../../../Services/Urls/Urls';
 
-
-const allProductsData = [
-    { id: 1, name: 'حذاء رياضي', price: 599, category: 'shoes', image: shoseIng },
-    { id: 2, name: 'حذاء رياضي', price: 599, category: 'shoes', image: shoseIng },
-    { id: 4, name: 'ساعة رجالي', price: 399, category: 'watches', image: shoseIng },
-    { id: 5, name: 'ساعة رجالي', price: 399, category: 'watches', image: shoseIng },
-    { id: 6, name: 'ساعة رجالي', price: 399, category: 'watches', image: shoseIng },
-    { id: 7, name: 'نظارات شمس', price: 199, category: 'sunglasses', image: shoseIng },
-    { id: 8, name: 'نظارات شمس', price: 199, category: 'sunglasses', image: shoseIng },
-    { id: 9, name: 'نظارات شمس', price: 199, category: 'sunglasses', image: shoseIng },
-    { id: 10, name: 'نظارات شمس', price: 199, category: 'sunglasses', image: shoseIng },
-    { id: 11, name: 'قميص رجالي', price: 349, category: 'mens-clothing', image: shoseIng },
-    { id: 12, name: 'قميص رجالي', price: 349, category: 'mens-clothing', image: shoseIng },
-    { id: 13, name: 'قميص رجالي', price: 349, category: 'mens-clothing', image: shoseIng },
-    { id: 14, name: 'قميص رجالي', price: 349, category: 'mens-clothing', image: shoseIng },
-    { id: 15, name: 'قميص رجالي', price: 349, category: 'mens-clothing', image: shoseIng },
-];
 
 const categories = [
     { key: 'all', labelAr: 'الكل', labelEn: 'All' },
@@ -30,13 +14,40 @@ const categories = [
 ];
 
 function AllProducts() {
+
+    const [productsList, setProductsList] = useState([]);
+    const [isLoading, setIsLoading] = useState(true)
+
     const { t, i18n } = useTranslation();
     const [selectedCategory, setSelectedCategory] = useState('all');
 
+
+    let getAllProducts = async (pageSize, pageNumber, name, tag, cat) => {
+        try {
+
+            let response = await publicAxiosInstance.get(PRODUCTS_URLS.display)
+            setProductsList(response?.data?.data?.data);
+            console.log(response?.data?.data?.data);
+
+        } catch (error) {
+            console.log(error)
+        }
+        finally {
+            setIsLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        getAllProducts()
+    }
+        , []
+    );
+
     const filteredProducts =
         selectedCategory === 'all'
-            ? allProductsData
-            : allProductsData.filter((p) => p.category === selectedCategory);
+            ? productsList
+            : productsList.filter((p) => p.category === selectedCategory);
+
 
     return (
         <div className="container mx-auto px-4 py-12">
@@ -55,8 +66,8 @@ function AllProducts() {
                                     <button
                                         onClick={() => setSelectedCategory(cat.key)}
                                         className={`w-full text-start px-4 py-2 rounded-md transition font-medium ${selectedCategory === cat.key
-                                                ? 'bg-indigo-600 text-white'
-                                                : 'text-gray-800 hover:bg-gray-100'
+                                            ? 'bg-indigo-600 text-white'
+                                            : 'text-gray-800 hover:bg-gray-100'
                                             }`}
                                     >
                                         {i18n.language === 'ar' ? cat.labelAr : cat.labelEn}
@@ -70,18 +81,18 @@ function AllProducts() {
                 {/* Products Grid */}
                 <section className="md:col-span-3">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {filteredProducts.map((product) => (
+                        {productsList.map((product) => (
                             <div
-                                key={product.id}
+                                key={product._id}
                                 className="bg-white rounded-xl border border-gray-100 shadow-md overflow-hidden hover:shadow-lg hover:-translate-y-1 transition duration-300 flex flex-col"
                             >
                                 <img
                                     src={product.image}
-                                    alt={product.name}
+                                    alt={product.name_ar}
                                     className="w-full h-52 object-cover"
                                 />
                                 <div className="p-5 text-center flex flex-col justify-between gap-2 flex-grow">
-                                    <h3 className="text-lg font-semibold text-gray-800">{product.name}</h3>
+                                    <h3 className="text-lg font-semibold text-gray-800">{product.name_ar}</h3>
                                     <p className="text-indigo-600 font-bold text-base">{product.price} ج.م</p>
 
                                     <div className="flex justify-center gap-3 mt-3">

@@ -52,7 +52,7 @@ function App() {
         { index: true, element: <Home /> },
         { path: "cart", element: <Cart /> },
         { path: "checkout", element: <Checkout /> },
-        { path: "shop", element: <AllProducts /> },
+        { path: "products", element: <AllProducts /> },
         { path: "/product/:id", element: <ProductDetails /> },
         { path: "contact", element: <ContactUs /> },
         { path: "about", element: <AboutUs /> },
