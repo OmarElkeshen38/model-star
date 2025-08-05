@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
@@ -6,10 +6,35 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import { ShoppingCart, Star } from 'lucide-react';
 import shoseImg from '../../../assets/shoice.jpg';
+import { PRODUCTS_URLS, publicAxiosInstance } from '../../../Services/Urls/Urls';
 
 function ProductDetails() {
+
     const { id } = useParams();
     const { i18n } = useTranslation();
+    const [productDetails, setProductDetails] = useState({});
+    const [isLoading, setIsLoading] = useState(true);
+
+    let getProductDetails = async (id) => {
+        try {
+
+            let response = await publicAxiosInstance.get(`${PRODUCTS_URLS.product_details(id)}`)
+            setProductDetails(response?.data?.data?.data);
+            console.log(response?.data?.data?.data);
+
+        } catch (error) {
+            console.log(error)
+        }
+        finally {
+            setIsLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        getProductDetails(id)
+    }
+        , []
+    );
 
     const product = {
         id,
@@ -70,16 +95,16 @@ function ProductDetails() {
                     <div className="w-full md:w-auto max-w-md mx-auto">
                         <img
                             src={product.image}
-                            alt={product.name}
+                            alt={productDetails.name_ar}
                             className="w-full rounded-lg shadow object-cover"
                         />
                     </div>
 
                     <div className="flex-1 space-y-5">
-                        <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
-                        <p className="text-indigo-600 text-2xl font-semibold">{product.price}</p>
-                        {renderStars(product.rating)}
-                        <p className="text-gray-700 leading-relaxed">{product.description}</p>
+                        <h1 className="text-3xl font-bold text-gray-900">{productDetails.name_ar}</h1>
+                        <p className="text-indigo-600 text-2xl font-semibold">{productDetails.price}</p>
+                        {renderStars(productDetails.ratings)}
+                        <p className="text-gray-700 leading-relaxed">{productDetails.description_ar}</p>
                         <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded transition">
                             <ShoppingCart size={18} className="inline mr-2" />
                             أضف إلى السلة

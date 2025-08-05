@@ -23,6 +23,17 @@
       "ar": "العربية"
     }
   },
+  "products": {
+    "cart": "اضف إلى السلة",
+    "allProducts": "جميع المنتجات",
+    "searchPlaceholder": "ابحث عن منتج...",
+    "filterByCategory": "تصفية حسب الفئة",
+    "sortBy": "ترتيب حسب",
+    "priceLowToHigh": "السعر: من الأقل إلى الأعلى",
+    "priceHighToLow": "السعر: من الأعلى إلى الأقل",
+    "newArrivals": "الوافدون الجدد",
+    "bestSellers": "الأكثر مبيعاً"
+  },
   "home": {
     "browseCategories": "تصفح الفئات",
     "exclusiveOffers": {

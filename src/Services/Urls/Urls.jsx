@@ -29,6 +29,6 @@ export const PRODUCTS_URLS = {
     display: `products/getproducts`,
     update: (id) => `products/update/${id}`,
     delete: (id) => `products/delete/${id}`,
-    product_details: (id) => `products/details/${id}`,
+    product_details: (id) => `products/getbyid/${id}`,
 }
 

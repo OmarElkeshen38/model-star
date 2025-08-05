@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import shoseIng from '../../../assets/shoice.jpg';
 import { PRODUCTS_URLS, publicAxiosInstance } from '../../../Services/Urls/Urls';
 
@@ -16,11 +16,15 @@ const categories = [
 function AllProducts() {
 
     const [productsList, setProductsList] = useState([]);
-    const [isLoading, setIsLoading] = useState(true)
+    const [isLoading, setIsLoading] = useState(true);
+    let navigate = useNavigate();
 
     const { t, i18n } = useTranslation();
     const [selectedCategory, setSelectedCategory] = useState('all');
 
+    function goToProductDetails(productId) {
+        navigate(`/product/${productId}`);
+    }
 
     let getAllProducts = async (pageSize, pageNumber, name, tag, cat) => {
         try {
@@ -81,37 +85,36 @@ function AllProducts() {
                 {/* Products Grid */}
                 <section className="md:col-span-3">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {productsList.map((product) => (
-                            <div
-                                key={product._id}
-                                className="bg-white rounded-xl border border-gray-100 shadow-md overflow-hidden hover:shadow-lg hover:-translate-y-1 transition duration-300 flex flex-col"
-                            >
-                                <img
-                                    src={product.image}
-                                    alt={product.name_ar}
-                                    className="w-full h-52 object-cover"
-                                />
-                                <div className="p-5 text-center flex flex-col justify-between gap-2 flex-grow">
-                                    <h3 className="text-lg font-semibold text-gray-800">{product.name_ar}</h3>
-                                    <p className="text-indigo-600 font-bold text-base">{product.price} ج.م</p>
+                        {isLoading ? (
+                            <div className="col-span-3 text-center py-10">
+                                <p className="text-indigo-600 text-4xl">
+                                    <i className="fa-solid fa-spinner animate-spin"></i>
+                                </p>
+                            </div>) :
+                            productsList.map((product) => (
+                                <div onClick={() => goToProductDetails(product._id)}
+                                    key={product._id}
+                                    className="bg-white cursor-pointer rounded-xl border border-gray-100 shadow-md overflow-hidden hover:shadow-lg hover:-translate-y-1 transition duration-300 flex flex-col"
+                                >
+                                    <img
+                                        src={product.image}
+                                        alt={product.name_ar}
+                                        className="w-full h-52 object-cover"
+                                    />
+                                    <div className="p-5 text-center flex flex-col justify-between gap-2 flex-grow">
+                                        <h3 className="text-lg font-semibold text-gray-800">{product.name_ar}</h3>
+                                        <p className="text-indigo-600 font-bold text-base">{product.price} ج.م</p>
 
-                                    <div className="flex justify-center gap-3 mt-3">
-                                        <Link
-                                            to={`/product/${product.id}`}
-                                            className="text-sm text-indigo-600 hover:underline"
-                                        >
-                                            {t('home.featured.details')}
-                                        </Link>
-
-                                        <button
-                                            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1.5 rounded-md text-sm font-medium transition"
-                                        >
-                                            {t('nav.cart', 'أضف إلى السلة')}
-                                        </button>
+                                        <div className="flex justify-center gap-3 mt-3">
+                                            <button
+                                                className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1.5 rounded-md text-sm font-medium transition"
+                                            >
+                                                {t('products.cart', 'أضف إلى السلة')} <i className="fa-solid fa-cart-shopping mx-3"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))}
                     </div>
                 </section>
             </div>
