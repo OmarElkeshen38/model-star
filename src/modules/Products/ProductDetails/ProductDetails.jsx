@@ -88,29 +88,36 @@ function ProductDetails() {
     }));
 
     return (
-        <div className="container mx-auto px-4 pt-16 ">
+        <div className="container mx-auto px-4 p-6 ">
             {/* تفاصيل المنتج */}
-            <div className="my-16">
-                <div className="flex flex-col md:flex-row items-center gap-10">
-                    <div className="w-full md:w-auto max-w-md mx-auto">
-                        <img
-                            src={product.image}
-                            alt={productDetails.name_ar}
-                            className="w-full rounded-lg shadow object-cover"
-                        />
-                    </div>
+            <div className="mb-10 mt-20 w-[70%] mx-auto bg-gray-100 rounded-lg">
+                {isLoading ? (
+                    <div className="col-span-3 text-center py-10">
+                        <p className="text-indigo-600 text-4xl h-screen flex items-center justify-center">
+                            <i className="fa-solid fa-spinner animate-spin"></i>
+                        </p>
+                    </div>) :
+                    <div className="flex flex-col md:flex-row items-center gap-10 p-6">
+                        <div className="w-full md:w-auto max-w-md mx-auto">
+                            <img
+                                src={product.image}
+                                alt={productDetails.name_ar}
+                                className="w-full rounded-lg shadow object-cover"
+                            />
+                        </div>
 
-                    <div className="flex-1 space-y-5">
-                        <h1 className="text-3xl font-bold text-gray-900">{productDetails.name_ar}</h1>
-                        <p className="text-indigo-600 text-2xl font-semibold">{productDetails.price}</p>
-                        {renderStars(productDetails.ratings)}
-                        <p className="text-gray-700 leading-relaxed">{productDetails.description_ar}</p>
-                        <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded transition">
-                            <ShoppingCart size={18} className="inline mr-2" />
-                            أضف إلى السلة
-                        </button>
+                        <div className="flex-1 space-y-5 text-center rounded-lg p-8 bg-gray-50">
+                            <h2 className="text-4xl font- text-gray-900">{productDetails.name_ar}</h2>
+                            <p className="text-indigo-600 text-3xl font-semibold">{productDetails.price}</p>
+                            <p className="text-gray-700 leading-relaxed">{productDetails.description_ar}</p>
+                            <p className='mx-auto'>{renderStars(productDetails.ratings)}</p>
+                            <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded transition">
+                                <ShoppingCart size={18} className="inline mr-2" />
+                                أضف إلى السلة
+                            </button>
+                        </div>
                     </div>
-                </div>
+                }
             </div>
 
             <div className='bg-white grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 p-6 rounded-lg shadow'>
