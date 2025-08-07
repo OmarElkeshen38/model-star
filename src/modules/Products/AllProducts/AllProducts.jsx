@@ -26,7 +26,7 @@ function AllProducts() {
         navigate(`/product/${productId}`);
     }
 
-    let getAllProducts = async (pageSize, pageNumber, name, tag, cat) => {
+    let getAllProducts = async () => {
         try {
 
             let response = await publicAxiosInstance.get(PRODUCTS_URLS.display)
@@ -43,9 +43,7 @@ function AllProducts() {
 
     useEffect(() => {
         getAllProducts()
-    }
-        , []
-    );
+    }, []);
 
     const filteredProducts =
         selectedCategory === 'all'

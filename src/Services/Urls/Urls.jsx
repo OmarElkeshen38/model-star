@@ -32,3 +32,11 @@ export const PRODUCTS_URLS = {
     product_details: (id) => `products/getbyid/${id}`,
 }
 
+export const CATEGORIES_URLS = {
+    create: `categories/create`,
+    display: `categories/all`,
+    update: (id) => `categories/update/${id}`,
+    delete: (id) => `categories/delete/${id}`,
+    product_details: (id) => `categories/getbyid/${id}`,
+}
+
