@@ -95,7 +95,7 @@ function AllProducts() {
                                     className="bg-white cursor-pointer rounded-xl border border-gray-100 shadow-md overflow-hidden hover:shadow-lg hover:-translate-y-1 transition duration-300 flex flex-col"
                                 >
                                     <img
-                                        src={product.image}
+                                        src={product.images?.[0]?.secure_url}
                                         alt={product.name_ar}
                                         className="w-full h-52 object-cover"
                                     />

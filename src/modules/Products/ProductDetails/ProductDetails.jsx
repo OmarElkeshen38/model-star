@@ -100,7 +100,7 @@ function ProductDetails() {
                     <div className="flex flex-col md:flex-row items-center gap-10 p-6">
                         <div className="w-full md:w-auto max-w-md mx-auto">
                             <img
-                                src={product.image}
+                                src={productDetails.images?.[0]?.secure_url}
                                 alt={productDetails.name_ar}
                                 className="w-full rounded-lg shadow object-cover"
                             />

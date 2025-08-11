@@ -49,6 +49,7 @@ function AdminProducts() {
         try {
             const response = await publicAxiosInstance.get(PRODUCTS_URLS.display);
             setProductsList(response?.data?.data?.data || []);
+
         } catch (error) {
             console.error(error);
         } finally {
