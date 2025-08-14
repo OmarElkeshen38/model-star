@@ -40,3 +40,10 @@ export const CATEGORIES_URLS = {
     product_details: (id) => `categories/getbyid/${id}`,
 }
 
+
+export const AUTH_URLS = {
+    signup: `auth/signup`,
+    login: `auth/login`,
+    logout: `auth/logout`,
+}
+
