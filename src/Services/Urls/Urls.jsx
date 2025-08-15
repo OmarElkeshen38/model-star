@@ -1,7 +1,8 @@
 import axios from "axios";
 import Cookies from 'js-cookie';
 
-export const baseURL = "https://api.modelstar-eg.com";
+// export const baseURL = "https://api.modelstar-eg.com";
+export const baseURL = "http://168.231.104.227:3000";
 
 export const publicAxiosInstance = axios.create({ baseURL });
 

@@ -15,7 +15,7 @@ function Register() {
   const { loading } = useSelector((state) => state.auth);
 
   function goToLogin() {
-    navigate("/login");
+    navigate("/auth/login");
   }
 
   const validationSchema = Yup.object().shape({
@@ -58,6 +58,7 @@ function Register() {
           username: data.username.trim(),
           email: data.email.trim(),
           password: data.password,
+          confirmPassword: data.confirmPassword,
           phone: data.phone.trim(),
         })
       ).unwrap();
