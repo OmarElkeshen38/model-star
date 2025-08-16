@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { ChevronDown, ShoppingCart, User } from 'lucide-react';
+import { useSelector } from 'react-redux';
 
 function Navbar() {
   const { t, i18n } = useTranslation();
@@ -10,6 +11,7 @@ function Navbar() {
   const [cartCount, setCartCount] = useState(3);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+  const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     const dir = i18n.language === 'ar' ? 'rtl' : 'ltr';
@@ -35,6 +37,17 @@ function Navbar() {
     { name: t('categories.womens-clothing'), slug: 'womens-clothing' },
     { name: t('categories.mens-clothing'), slug: 'mens-clothing' },
   ];
+
+  const handleClick = () => {
+    if (!user) {
+      // لو مش لوج إن
+      navigate("/auth/login");
+    } else if (user.role === "admin") {
+      navigate("/admin");
+    } else {
+      navigate("/user-profile");
+    }
+  };
 
   return (
     <nav className="bg-white text-gray-900 shadow-md px-6 py-4 fixed left-0 right-0 top-0 z-50">
@@ -136,7 +149,7 @@ function Navbar() {
               )}
             </button>
             <button
-              onClick={() => navigate("/auth/login")}
+              onClick={handleClick}
               className="p-2 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white transition cursor-pointer"
               title={t("nav.login")}
             >

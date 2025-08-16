@@ -5,8 +5,11 @@ export const registerUser = createAsyncThunk(
   "auth/registerUser",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await publicAxiosInstance.post(AUTH_URLS.signup, userData);
-        console.log("Registration response:", response.data);
+      const response = await publicAxiosInstance.post(
+        AUTH_URLS.signup,
+        userData
+      );
+      console.log("Registration response:", response.data);
       return response.data;
     } catch (error) {
       console.log("Registration error:", error);
@@ -20,9 +23,7 @@ export const loginUser = createAsyncThunk(
   async (credentials, { rejectWithValue }) => {
     try {
       const res = await publicAxiosInstance.post(AUTH_URLS.login, credentials);
-        console.log("Login response:", res.data);
-      // حفظ التوكن
-      localStorage.setItem("token", res.data.token);
+      
       return res.data;
     } catch (err) {
       return rejectWithValue(err.response?.data || { message: "Login failed" });
@@ -69,8 +70,9 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.user;
-        state.token = action.payload.token;
+        state.user = action.payload.data.user;
+        state.token = action.payload.data.access_token;
+
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;

@@ -39,10 +39,19 @@ function Login() {
 
   const onSubmit = async (data) => {
     try {
-      await dispatch(loginUser(data)).unwrap();
+      let res = await dispatch(loginUser(data)).unwrap();
       toast.success(t("login.success"));
       reset();
-      goToHome();
+
+      // حفظ التوكن
+      localStorage.setItem("token", res.data.access_token);
+
+      if (res.data.user.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/user-profile");
+      }
+
     } catch (err) {
       toast.error(err?.message || t("login.error"));
     }

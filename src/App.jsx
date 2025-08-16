@@ -31,6 +31,8 @@ import AdminProducts from './modules/Admin/AdminProducts/AdminProducts';
 import AdminOrders from './modules/Admin/AdminOrders/AdminOrders';
 import AdminUsers from './modules/Admin/AdminUsers/AdminUsers';
 import AdminSettings from './modules/Admin/AdminSettings/AdminSettings';
+import RoleBasedRoute from './modules/RoleBasedRoute/RoleBasedRoute';
+import ProtectedRoute from './modules/ProtectedRoute/ProtectedRoute';
 
 function App() {
   const { i18n } = useTranslation();
@@ -51,23 +53,58 @@ function App() {
       children: [
         { index: true, element: <Home /> },
         { path: "cart", element: <Cart /> },
-        { path: "checkout", element: <Checkout /> },
+        {
+          path: "checkout", element: (
+            <ProtectedRoute>
+              <Checkout />
+            </ProtectedRoute>
+          )
+        },
         { path: "products", element: <AllProducts /> },
         { path: "/product/:id", element: <ProductDetails /> },
         { path: "contact", element: <ContactUs /> },
         { path: "about", element: <AboutUs /> },
-        { path: "user-profile", element: <UserProfile /> },
-        { path: "/edit-user-data", element: <EditProfile /> },
-        { path: "/edit-user-password", element: <ChangePassword /> },
+
+        // صفحات المستخدم
         {
-          path: '/admin',
-          element: <AdminLayout />,
+          path: "user-profile",
+          element: (
+            <RoleBasedRoute allowedRoles={["user"]}>
+              <UserProfile />
+            </RoleBasedRoute>
+          ),
+        },
+        {
+          path: "/edit-user-data",
+          element: (
+            <ProtectedRoute>
+              <EditProfile />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/edit-user-password",
+          element: (
+            <ProtectedRoute>
+              <ChangePassword />
+            </ProtectedRoute>
+          ),
+        },
+
+        // صفحات الأدمن
+        {
+          path: "/admin",
+          element: (
+            <RoleBasedRoute allowedRoles={["admin"]}>
+              <AdminLayout />
+            </RoleBasedRoute>
+          ),
           children: [
             { index: true, element: <AdminDashboard /> },
-            { path: 'products', element: <AdminProducts /> },
-            { path: 'orders', element: <AdminOrders /> },
-            { path: 'users', element: <AdminUsers /> },
-            { path: 'settings', element: <AdminSettings /> },
+            { path: "products", element: <AdminProducts /> },
+            { path: "orders", element: <AdminOrders /> },
+            { path: "users", element: <AdminUsers /> },
+            { path: "settings", element: <AdminSettings /> },
           ],
         },
       ],
@@ -83,14 +120,6 @@ function App() {
         { path: "reset-password", element: <ResetPass /> },
       ],
     },
-    {
-      path: "/dashboard",
-      element: <MainLayout />,
-      errorElement: <NotFound />,
-      children: [
-        // { index: true, element: <DashboardHome /> },
-      ],
-    }
   ]);
 
   return (
