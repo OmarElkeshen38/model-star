@@ -34,7 +34,7 @@ function ForgetPass() {
       await dispatch(sendResetPassword(data)).unwrap();
       toast.success(t("forgetPassword.success"));
       // إعادة توجيه المستخدم أو تنفيذ أي إجراء آخر بعد النجاح
-      navigate("/auth/login");
+      navigate("/auth/reset-password");
     } catch (err) {
       toast.error(err?.message || t("forgetPassword.error"));
     }

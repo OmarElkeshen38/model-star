@@ -35,8 +35,11 @@ export const sendResetPassword = createAsyncThunk(
   "auth/forgetPassword",
   async (data, { rejectWithValue }) => {
     try {
-      const res = await publicAxiosInstance.post(AUTH_URLS.forgetPassword, data);
-      return res.data;
+      const res = await publicAxiosInstance.post(
+        AUTH_URLS.forgetPassword,
+        data
+      );
+      return res.data?.data.data;
     } catch (err) {
       return rejectWithValue(
         err.response?.data || { message: "Something went wrong" }
@@ -69,6 +72,7 @@ const authSlice = createSlice({
     token: storedAccessToken || null,
     loading: false,
     error: null,
+    resetEmail: null,
   },
   reducers: {
     logout: (state) => {
@@ -124,10 +128,28 @@ const authSlice = createSlice({
       .addCase(sendResetPassword.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
+
+        state.resetEmail = action.payload?.email;
       })
       .addCase(sendResetPassword.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload?.message || "Failed to send reset email";
+      })
+
+      .addCase(resetPassword.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = null;
+      })
+      .addCase(resetPassword.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = action.payload?.message || "Password reset success";
+
+        state.resetEmail = null; 
+      })
+      .addCase(resetPassword.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Password reset failed";
       });
   },
 });
