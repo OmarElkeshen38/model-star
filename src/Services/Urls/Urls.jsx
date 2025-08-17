@@ -45,6 +45,8 @@ export const CATEGORIES_URLS = {
 export const AUTH_URLS = {
     signup: `auth/signup`,
     login: `auth/login`,
+    forgetPassword: `auth/sendforgotpassword`,
+    resetPassword: `auth/verifypassword`,
     logout: `auth/logout`,
 }
 

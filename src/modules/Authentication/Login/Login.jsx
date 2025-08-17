@@ -114,7 +114,7 @@ function Login() {
           </Link>
         </p>
         <p>
-          <Link to="/auth/forgot-password" className="text-indigo-600 hover:underline">
+          <Link to="/auth/forget-password" className="text-indigo-600 hover:underline">
             {t("login.forgotPassword")}
           </Link>
         </p>

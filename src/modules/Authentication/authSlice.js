@@ -31,6 +31,34 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+export const sendResetPassword = createAsyncThunk(
+  "auth/forgetPassword",
+  async (data, { rejectWithValue }) => {
+    try {
+      const res = await publicAxiosInstance.post(AUTH_URLS.forgetPassword, data);
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data || { message: "Something went wrong" }
+      );
+    }
+  }
+);
+
+export const resetPassword = createAsyncThunk(
+  "auth/resetPassword",
+  async (data, { rejectWithValue }) => {
+    try {
+      const res = await publicAxiosInstance.post(AUTH_URLS.resetPassword, data);
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data || { message: "Something went wrong" }
+      );
+    }
+  }
+);
+
 const storedUser = localStorage.getItem("user");
 const storedAccessToken = localStorage.getItem("accessToken");
 
@@ -87,6 +115,19 @@ const authSlice = createSlice({
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload?.message || "Login failed";
+      })
+
+      .addCase(sendResetPassword.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(sendResetPassword.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(sendResetPassword.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.message || "Failed to send reset email";
       });
   },
 });
