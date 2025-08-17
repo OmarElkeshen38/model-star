@@ -23,7 +23,7 @@ export const loginUser = createAsyncThunk(
   async (credentials, { rejectWithValue }) => {
     try {
       const res = await publicAxiosInstance.post(AUTH_URLS.login, credentials);
-      
+
       return res.data;
     } catch (err) {
       return rejectWithValue(err.response?.data || { message: "Login failed" });
@@ -31,13 +31,14 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-const token = localStorage.getItem("token");
+const storedUser = localStorage.getItem("user");
+const storedAccessToken = localStorage.getItem("accessToken");
 
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    user: null,
-    token: null,
+    user: storedUser ? JSON.parse(storedUser) : null,
+    token: storedAccessToken || null,
     loading: false,
     error: null,
   },
@@ -45,7 +46,8 @@ const authSlice = createSlice({
     logout: (state) => {
       state.user = null;
       state.token = null;
-      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      localStorage.removeItem("accessToken");
     },
   },
   extraReducers: (builder) => {
@@ -70,9 +72,17 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.data.user;
-        state.token = action.payload.data.access_token;
+        state.user = action.payload.data.data.user;
+        state.token = action.payload.data.data.access_token;
 
+        localStorage.setItem(
+          "user",
+          JSON.stringify(action.payload.data.data.user)
+        );
+        localStorage.setItem(
+          "accessToken",
+          action.payload.data.data.access_token
+        );
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;

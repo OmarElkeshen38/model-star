@@ -124,5 +124,16 @@
     "accountExists": "Account already exists",
     "accountNotFound": "No account found with this email",
     "sessionExpired": "Session expired, please log in again"
+  },
+  "user": {
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "editProfile": "Edit Profile",
+    "changePassword": "Change Password",
+    "logout": "Logout",
+    "noUser": "No user found",
+    "noPhone": "No phone number",
+    "noAddress": "No address"
   }
 }

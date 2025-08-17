@@ -43,10 +43,7 @@ function Login() {
       toast.success(t("login.success"));
       reset();
 
-      // حفظ التوكن
-      localStorage.setItem("token", res.data.access_token);
-
-      if (res.data.user.role === "admin") {
+      if (res.data.data.user.role === "admin") {
         navigate("/admin");
       } else {
         navigate("/user-profile");
