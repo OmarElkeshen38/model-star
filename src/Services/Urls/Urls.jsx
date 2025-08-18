@@ -1,7 +1,6 @@
 import axios from "axios";
 
-// export const baseURL = "https://api.modelstar-eg.com";
-export const baseURL = "http://168.231.104.227:3000";
+export const baseURL = "http://168.231.104.227:3000/";
 
 export const publicAxiosInstance = axios.create({ baseURL });
 
@@ -26,19 +25,19 @@ export default privateAxiosInstance;
 
 
 export const PRODUCTS_URLS = {
-  products: `products/getproducts/`,
+  products: `products/getproducts`,
   create: `admin/create_products`,
   update: (id) => `admin/update_products/${id}`,
-  delete: () => `admin/delete_products/`,
+  delete: (id) => `admin/delete_products/${id}`,
   product_details: (id) => `admin/get_product/${id}`,
 }
 
 export const CATEGORIES_URLS = {
-  create: `categories/create`,
-  display: `categories/all`,
-  update: (id) => `categories/update/${id}`,
-  delete: (id) => `categories/delete/${id}`,
-  product_details: (id) => `categories/getbyid/${id}`,
+  categories: `categories/all`,
+  create: `admin/create_categories`,
+  update: (id) => `admin/update_categories/${id}`,
+  delete: (id) => `admin/delete_categories/${id}`,
+  product_details: (id) => `admin/get_categories/${id}`,
 }
 
 

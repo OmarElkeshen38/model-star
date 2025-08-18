@@ -27,9 +27,14 @@ export const addProduct = createAsyncThunk(
   async (productData, { rejectWithValue }) => {
     try {
       const formData = new FormData();
+
       Object.keys(productData).forEach((key) => {
-        if (key === "images") {
-          productData.images.forEach((img) => formData.append("images", img));
+        if (key === "image" && Array.isArray(productData.image)) {
+          productData.image.forEach((file) => {
+            if (file instanceof File) {
+              formData.append("image", file); // ✅ نفس المفتاح يتكرر
+            }
+          });
         } else {
           formData.append(key, productData[key]);
         }
@@ -39,11 +44,16 @@ export const addProduct = createAsyncThunk(
         `${PRODUCTS_URLS.create}`,
         formData,
         {
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
+
+      console.log("Product added successfully:", res.data);
       return res.data;
     } catch (err) {
+      console.error("Add product error:", err);
       return rejectWithValue(err.response?.data || err.message);
     }
   }
@@ -55,23 +65,23 @@ export const updateProduct = createAsyncThunk(
   async ({ id, data }, { rejectWithValue }) => {
     try {
       const formData = new FormData();
+
       Object.keys(data).forEach((key) => {
-        if (key === "images" && Array.isArray(data.images)) {
-          data.images.forEach((img) => formData.append("images", img));
-        } else {
-          formData.append(key, data[key]);
-        }
+        if (key === "category" || key === "images" || key === "image") return;
+
+        formData.append(key, data[key]);
       });
 
-      const res = await privateAxiosInstance.put(
+      const res = await privateAxiosInstance.post(
         `${PRODUCTS_URLS.update(id)}`,
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
+        formData
       );
-      return res.data;
+
+      console.log("Updated product:", res.data);
+
+      return res.data.data.data;
     } catch (err) {
+      console.error("Update error:", err);
       return rejectWithValue(err.response?.data || err.message);
     }
   }
@@ -85,16 +95,14 @@ export const deleteProduct = createAsyncThunk(
 
     try {
       const res = await privateAxiosInstance.delete(
-        `${PRODUCTS_URLS.delete()}`, {
-            params: { id } 
-        }
+        `${PRODUCTS_URLS.delete(id)}`
       );
 
       console.log("Deleted product:", res.data);
 
       return { id, ...res.data };
     } catch (err) {
-        console.error("Delete error:", err.response?.data);
+      console.error("Delete error:", err.response?.data);
       return rejectWithValue(err.response?.data || err.message);
     }
   }
@@ -118,7 +126,7 @@ const productSlice = createSlice({
       })
       .addCase(getProducts.fulfilled, (state, action) => {
         state.loading = false;
-        state.items = action.payload.products || action.payload; // حسب الريسبونس عندك
+        state.items = action.payload.products || action.payload;
         state.total = action.payload.total || action.payload.length;
       })
       .addCase(getProducts.rejected, (state, action) => {
@@ -128,22 +136,28 @@ const productSlice = createSlice({
 
       // ADD
       .addCase(addProduct.fulfilled, (state, action) => {
-        state.items.push(action.payload);
+        state.items.unshift(action.payload);
         state.total += 1;
       })
 
       // UPDATE
       .addCase(updateProduct.fulfilled, (state, action) => {
-        const idx = state.items.findIndex((p) => p.id === action.payload.id);
+        const updatedProduct = action.payload;
+        const idx = state.items.findIndex((p) => p.id === updatedProduct.id);
         if (idx !== -1) {
-          state.items[idx] = action.payload;
+          state.items[idx] = updatedProduct; // تحديث المنتج
         }
+
+        state.success = "تم تحديث المنتج بنجاح";
       })
 
       // DELETE
       .addCase(deleteProduct.fulfilled, (state, action) => {
         state.items = state.items.filter((p) => p.id !== action.payload);
         state.total -= 1;
+
+        const deletedId = action.payload.id;
+        state.items = state.items.filter((p) => p.id !== deletedId);
       });
   },
 });

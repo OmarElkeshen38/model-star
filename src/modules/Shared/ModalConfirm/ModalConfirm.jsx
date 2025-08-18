@@ -2,8 +2,17 @@ import React from 'react';
 import './ModalConfirm.css';
 
 function ModalConfirm({ onCancel, onConfirm }) {
+    const handleOverlayClick = (e) => {
+        if (e.target.classList.contains('modal-overlay')) {
+            onCancel();
+        }
+    };
+
     return (
-        <div className="modal-overlay animate-modal-fade-in">
+        <div 
+            className="modal-overlay animate-modal-fade-in" 
+            onClick={handleOverlayClick}
+        >
             <div className="modal-box animate-modal-scale-in">
                 <h2 className="text-lg font-bold mb-4">تأكيد الحذف</h2>
                 <p className="mb-6 text-gray-700">هل أنت متأكد أنك تريد حذف هذا المنتج؟</p>
@@ -26,4 +35,4 @@ function ModalConfirm({ onCancel, onConfirm }) {
     )
 }
 
-export default ModalConfirm
+export default ModalConfirm;

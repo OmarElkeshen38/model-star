@@ -7,105 +7,101 @@ import {
   deleteProduct,
 } from "./productSlice";
 import Pagination from "../../Shared/Pagination/Pagination";
-// import { FiEdit, FiTrash2, FiPlus } from "react-icons/fi";
+import { FiEdit, FiTrash2, FiPlus } from "react-icons/fi";
+import ModalConfirm from "../../Shared/ModalConfirm/ModalConfirm";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 export default function AdminProducts() {
   const dispatch = useDispatch();
   const { items: products, loading } = useSelector((state) => state.products);
 
   const [showModal, setShowModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showUpdateConfirm, setShowUpdateConfirm] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
-
-  const [formData, setFormData] = useState({
-    name_ar: "",
-    name_en: "",
-    description_ar: "",
-    description_en: "",
-    price: "",
-    category: "",
-    sizes: "",
-    images: "",
-  });
 
   const [page, setPage] = useState(1);
   const limit = 10;
 
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors },
+  } = useForm();
+
+  // جلب المنتجات
   useEffect(() => {
-    dispatch(getProducts({ page: 1, limit: 20 }));
+    dispatch(getProducts());
   }, [dispatch]);
 
   const totalPages = Math.ceil(products.length / limit);
   const startIndex = (page - 1) * limit;
   const currentProducts = products.slice(startIndex, startIndex + limit);
 
+  // فتح المودال (إضافة/تعديل)
   const handleOpenModal = (product = null) => {
     if (product) {
+      setIsEditMode(true);
       setEditingProduct(product);
-      setFormData({
-        name_ar: product.name_ar,
-        name_en: product.name_en,
-        description_ar: product.description_ar,
-        description_en: product.description_en,
-        price: product.price,
-        category: product.category?._id || "",
-        sizes: product.sizes.join(", "),
-        images: product.images?.map((img) => img.url).join(", "),
-      });
+      setValue("name_ar", product.name_ar);
+      setValue("name_en", product.name_en);
+      setValue("description_ar", product.description_ar);
+      setValue("description_en", product.description_en);
+      setValue("price", product.price);
+      setValue("category", product.category?._id || "");
+      setValue("sizes", product.sizes.join(", "));
+      setValue("image", product.image?.map((img) => img.url).join(", "));
     } else {
+      setIsEditMode(false);
       setEditingProduct(null);
-      setFormData({
-        name_ar: "",
-        name_en: "",
-        description_ar: "",
-        description_en: "",
-        price: "",
-        category: "",
-        sizes: "",
-        images: "",
-      });
+      reset();
     }
     setShowModal(true);
   };
 
-  const handleSave = () => {
+  // حفظ المنتج (إضافة أو تعديل)
+  const onSubmit = (data) => {
     const payload = {
-      ...formData,
-      price: Number(formData.price),
-      sizes: formData.sizes.split(",").map((s) => s.trim()),
-      images: formData.images.split(",").map((url) => ({ url })),
+      ...data,
+      price: Number(data.price),
+      image: data.image && data.image.length > 0 ? Array.from(data.image) : [],
     };
 
-    if (editingProduct) {
-      setShowUpdateConfirm(true); // أولاً يظهر كونفرميشن
+    if (isEditMode && editingProduct) {
+      dispatch(updateProduct({ id: editingProduct._id, data }))
+        .unwrap()
+        .then(() => {
+          dispatch(getProducts({ page: 1, limit: 20 }));
+          toast.success("تم تحديث المنتج بنجاح");
+          setShowModal(false);
+        })
+        .catch(() => toast.error("حدث خطأ أثناء التحديث"));
     } else {
-      dispatch(addProduct(payload));
-      setShowModal(false);
+      dispatch(addProduct(payload))
+        .unwrap()
+        .then(() => {
+          toast.success("تم إضافة المنتج بنجاح");
+          setShowModal(false);
+        })
+        .catch(() => toast.error("حدث خطأ أثناء الإضافة"));
     }
   };
 
-  const confirmUpdate = () => {
-    const payload = {
-      ...formData,
-      price: Number(formData.price),
-      sizes: formData.sizes.split(",").map((s) => s.trim()),
-      images: formData.images.split(",").map((url) => ({ url })),
-    };
-
-    dispatch(updateProduct({ id: editingProduct.id, data: payload }));
-    setShowUpdateConfirm(false);
-    setShowModal(false);
-  };
-
+  // حذف المنتج
   const handleDelete = (id) => {
     setDeleteId(id);
     setShowDeleteModal(true);
   };
 
   const confirmDelete = () => {
-    dispatch(deleteProduct(deleteId));
+    dispatch(deleteProduct(deleteId))
+      .unwrap()
+      .then(() => toast.success("تم حذف المنتج"))
+      .catch(() => toast.error("حدث خطأ أثناء الحذف"));
     setShowDeleteModal(false);
   };
 
@@ -120,7 +116,7 @@ export default function AdminProducts() {
           onClick={() => handleOpenModal()}
           className="flex items-center gap-2 px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow-md transition"
         >
-          {/* <FiPlus /> إضافة منتج */}
+          <FiPlus /> إضافة منتج
         </button>
       </div>
 
@@ -143,7 +139,7 @@ export default function AdminProducts() {
           <tbody>
             {currentProducts.map((product, idx) => (
               <tr
-                key={product.id}
+                key={product._id}
                 className="border-b hover:bg-gray-50 transition text-center"
               >
                 <td className="p-3">{startIndex + idx + 1}</td>
@@ -174,13 +170,13 @@ export default function AdminProducts() {
                     onClick={() => handleOpenModal(product)}
                     className="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md shadow transition"
                   >
-                    {/* <FiEdit /> */}
+                    <FiEdit />
                   </button>
                   <button
-                    onClick={() => handleDelete(product.id)}
+                    onClick={() => handleDelete(product._id)}
                     className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-md shadow transition"
                   >
-                    {/* <FiTrash2 /> */}
+                    <FiTrash2 />
                   </button>
                 </td>
               </tr>
@@ -196,106 +192,126 @@ export default function AdminProducts() {
       </div>
 
       {/* Overlay */}
-      {(showModal || showDeleteModal || showUpdateConfirm) && (
+      {(showModal || showDeleteModal) && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40"></div>
       )}
 
       {/* Add/Edit Modal */}
       {showModal && (
-        <div className="fixed inset-0 flex justify-center items-center z-50">
-          <div className="bg-white rounded-lg shadow-xl p-6 animate-fade-in-up w-[420px]">
-            <h2 className="text-xl font-bold mb-4 text-gray-800">
-              {editingProduct ? "✏️ تعديل منتج" : "➕ إضافة منتج"}
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm transition-all">
+          <div className="bg-white w-full max-w-2xl rounded-lg p-6 shadow-lg relative">
+            <h2 className="text-xl font-bold mb-4">
+              {isEditMode ? "تعديل المنتج" : "إضافة منتج جديد"}
             </h2>
-            <div className="space-y-3">
-              {[
-                { name: "name_ar", label: "الاسم (عربي)" },
-                { name: "name_en", label: "الاسم (English)" },
-                { name: "description_ar", label: "الوصف (عربي)" },
-                { name: "description_en", label: "الوصف (English)" },
-                { name: "price", label: "السعر" },
-                { name: "category", label: "الفئة (ID)" },
-                { name: "sizes", label: "المقاسات (مفصولة بفواصل)" },
-                { name: "images", label: "الصور (روابط مفصولة بفواصل)" },
-              ].map((field) => (
+
+            <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="flex flex-col">
+                <label htmlFor="name_ar" className="mb-1 text-sm font-semibold text-indigo-600">اسم المنتج (عربي)</label>
                 <input
-                  key={field.name}
-                  type="text"
-                  placeholder={field.label}
-                  value={formData[field.name]}
-                  onChange={(e) =>
-                    setFormData({ ...formData, [field.name]: e.target.value })
-                  }
-                  className="w-full p-3 border rounded-md focus:ring-2 focus:ring-green-500 outline-none"
+                  id="name_ar"
+                  {...register("name_ar", { required: true })}
+                  placeholder="اسم المنتج (عربي)"
+                  className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                 />
-              ))}
-            </div>
-            <div className="mt-6 flex justify-end gap-3">
-              <button
-                onClick={() => setShowModal(false)}
-                className="px-5 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg transition"
-              >
-                إلغاء
-              </button>
-              <button
-                onClick={handleSave}
-                className="px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow-md transition"
-              >
-                حفظ
-              </button>
-            </div>
+              </div>
+
+              <div className="flex flex-col">
+                <label htmlFor="name_en" className="mb-1 text-sm font-semibold text-indigo-600">اسم المنتج (انجليزي)</label>
+                <input
+                  id="name_en"
+                  {...register("name_en", { required: true })}
+                  placeholder="اسم المنتج (انجليزي)"
+                  className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <label htmlFor="price" className="mb-1 text-sm font-semibold text-indigo-600">السعر</label>
+                <input
+                  id="price"
+                  type="number"
+                  {...register("price", { required: true })}
+                  placeholder="السعر"
+                  className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <label htmlFor="category" className="mb-1 text-sm font-semibold text-indigo-600">الفئة (ID)</label>
+                <input
+                  id="category"
+                  {...register("category")}
+                  placeholder="الفئة (ID)"
+                  className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <label htmlFor="sizes" className="mb-1 text-sm font-semibold text-indigo-600">المقاسات (مفصولة بفاصلة)</label>
+                <input
+                  id="sizes"
+                  {...register("sizes")}
+                  placeholder="المقاسات (مفصولة بفاصلة)"
+                  className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
+
+              <div className="flex flex-col col-span-full">
+                <label htmlFor="image" className="mb-1 text-sm font-semibold text-indigo-600">صور المنتج</label>
+                <input
+                  type="file"
+                  id="image"
+                  {...register("image")}
+                  className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
+
+              <div className="flex flex-col col-span-full">
+                <label htmlFor="description_ar" className="mb-1 text-sm font-semibold text-indigo-600">الوصف بالعربي</label>
+                <textarea
+                  id="description_ar"
+                  {...register("description_ar")}
+                  placeholder="الوصف بالعربي"
+                  className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
+
+              <div className="flex flex-col col-span-full">
+                <label htmlFor="description_en" className="mb-1 text-sm font-semibold text-indigo-600">الوصف بالانجليزي</label>
+                <textarea
+                  id="description_en"
+                  {...register("description_en")}
+                  placeholder="الوصف بالانجليزي"
+                  className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              </div>
+
+              <div className="flex justify-end mt-4 gap-3 col-span-full">
+                <button
+                  type="button"
+                  className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 transition-colors"
+                  onClick={() => setShowModal(false)}
+                >
+                  إلغاء
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 rounded bg-indigo-600 hover:bg-indigo-700 text-white transition-colors"
+                >
+                  {isEditMode ? "تحديث" : "حفظ"}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
 
       {/* Delete Modal */}
       {showDeleteModal && (
-        <div className="fixed inset-0 flex justify-center items-center z-50">
-          <div className="bg-white rounded-lg shadow-xl p-6 animate-fade-in-up w-[400px]">
-            <p className="text-gray-800 font-medium mb-4">
-              ⚠️ هل أنت متأكد من حذف هذا المنتج؟
-            </p>
-            <div className="flex justify-center gap-4">
-              <button
-                onClick={confirmDelete}
-                className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow-md transition"
-              >
-                نعم
-              </button>
-              <button
-                onClick={() => setShowDeleteModal(false)}
-                className="px-5 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg transition"
-              >
-                إلغاء
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Update Confirm Modal */}
-      {showUpdateConfirm && (
-        <div className="fixed inset-0 flex justify-center items-center z-50">
-          <div className="bg-white rounded-lg shadow-xl p-6 animate-fade-in-up w-[400px]">
-            <p className="text-gray-800 font-medium mb-4">
-              ⚠️ هل تريد حفظ التعديلات على هذا المنتج؟
-            </p>
-            <div className="flex justify-center gap-4">
-              <button
-                onClick={confirmUpdate}
-                className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md transition"
-              >
-                نعم، احفظ
-              </button>
-              <button
-                onClick={() => setShowUpdateConfirm(false)}
-                className="px-5 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg transition"
-              >
-                إلغاء
-              </button>
-            </div>
-          </div>
-        </div>
+        <ModalConfirm
+          onCancel={() => setShowDeleteModal(false)}
+          onConfirm={confirmDelete}
+        />
       )}
     </div>
   );
