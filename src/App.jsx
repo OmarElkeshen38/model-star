@@ -33,6 +33,7 @@ import AdminUsers from './modules/Admin/AdminUsers/AdminUsers';
 import AdminSettings from './modules/Admin/AdminSettings/AdminSettings';
 import RoleBasedRoute from './modules/RoleBasedRoute/RoleBasedRoute';
 import ProtectedRoute from './modules/ProtectedRoute/ProtectedRoute';
+import AdminCategories from './modules/Admin/AdminCategories/AdminCategories';
 
 function App() {
   const { i18n } = useTranslation();
@@ -102,6 +103,7 @@ function App() {
           children: [
             { index: true, element: <AdminDashboard /> },
             { path: "products", element: <AdminProducts /> },
+            { path: "categories", element: <AdminCategories /> },
             { path: "orders", element: <AdminOrders /> },
             { path: "users", element: <AdminUsers /> },
             { path: "settings", element: <AdminSettings /> },

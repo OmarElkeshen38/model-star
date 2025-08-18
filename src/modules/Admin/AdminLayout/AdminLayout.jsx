@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Package, Users, ShoppingCart, Settings } from 'lucide-react';
+import { LayoutDashboard, Package, Users, ShoppingCart, Settings, ChartBarStacked } from 'lucide-react';
 
 function AdminLayout() {
     const location = useLocation();
@@ -8,6 +8,7 @@ function AdminLayout() {
     const links = [
         { to: '/admin', label: 'لوحة التحكم', icon: <LayoutDashboard size={18} /> },
         { to: '/admin/products', label: 'المنتجات', icon: <Package size={18} /> },
+        { to: '/admin/categories', label: 'الاصناف', icon: <ChartBarStacked size={18} /> },
         { to: '/admin/orders', label: 'الطلبات', icon: <ShoppingCart size={18} /> },
         { to: '/admin/users', label: 'المستخدمون', icon: <Users size={18} /> },
         { to: '/admin/settings', label: 'الإعدادات', icon: <Settings size={18} /> },
