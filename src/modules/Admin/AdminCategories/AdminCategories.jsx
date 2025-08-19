@@ -53,6 +53,7 @@ export default function AdminCategories() {
             setEditingCategory(category);
             setValue("name_ar", category.name_ar);
             setValue("name_en", category.name_en);
+            setValue("icon", category.icon);
         } else {
             setIsEditMode(false);
             setEditingCategory(null);
@@ -63,25 +64,37 @@ export default function AdminCategories() {
 
     // حفظ الصنف
     const onSubmit = (data) => {
-        if (isEditMode && editingCategory) {
-            dispatch(updateCategory({ id: editingCategory._id, data }))
-                .unwrap()
-                .then(() => {
-                    dispatch(getCategories());
-                    toast.success("تم تحديث الصنف بنجاح");
-                    setShowModal(false);
-                })
-                .catch(() => toast.error("حدث خطأ أثناء التحديث"));
-        } else {
-            dispatch(addCategory(data))
-                .unwrap()
-                .then(() => {
-                    toast.success("تم إضافة الصنف بنجاح");
-                    setShowModal(false);
-                })
-                .catch(() => toast.error("حدث خطأ أثناء الإضافة"));
-        }
-    };
+  const formData = new FormData();
+  formData.append("name_ar", data.name_ar);
+  formData.append("name_en", data.name_en);
+
+  // لو اختار صورة جديدة
+  if (data.icon && data.icon[0]) {
+    formData.append("icon", data.icon[0]);
+  }
+
+  if (isEditMode && editingCategory) {
+    dispatch(updateCategory({ id: editingCategory._id, data: formData }))
+      .unwrap()
+      .then(() => {
+        dispatch(getCategories());
+        toast.success("تم تحديث الصنف بنجاح");
+        setShowModal(false);
+      })
+      .catch(() => toast.error("حدث خطأ أثناء التحديث"));
+  } else {
+    dispatch(addCategory(formData))
+      .unwrap()
+      .then(() => {
+        dispatch(getCategories());
+        toast.success("تم إضافة الصنف بنجاح");
+        setShowModal(false);
+      })
+      .catch(() => toast.error("حدث خطأ أثناء الإضافة"));
+  }
+};
+
+
 
     // حذف الصنف
     const handleDelete = (id) => {
@@ -120,6 +133,7 @@ export default function AdminCategories() {
                     <thead className="bg-gray-100 text-gray-700 text-left">
                         <tr>
                             <th className="p-3">#</th>
+                            <th className="p-3">الصورة</th>
                             <th className="p-3">الاسم</th>
                             <th className="p-3">الاسم (EN)</th>
                             <th className="p-3 text-center">الإجراءات</th>
@@ -132,6 +146,13 @@ export default function AdminCategories() {
                                 className="border-b hover:bg-gray-50 transition text-center"
                             >
                                 <td className="p-3">{startIndex + idx + 1}</td>
+                                <td className="p-3 flex justify-center">
+                                    <img
+                                        src={category.icon?.secure_url || "/placeholder.png"}
+                                        alt={category.name_en}
+                                        className="w-14 h-14 object-cover rounded-md shadow-sm"
+                                    />
+                                </td>
                                 <td className="p-3 font-medium text-gray-800">
                                     {category.name_ar}
                                 </td>
@@ -198,6 +219,25 @@ export default function AdminCategories() {
                                     placeholder="اسم الصنف بالانجليزي"
                                     className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                                 />
+                            </div>
+
+                            <div className="flex flex-col">
+                                <label htmlFor="icon" className="mb-1 text-sm font-semibold text-indigo-600">
+                                    أيقونة الصنف
+                                </label>
+                                <input
+                                    type="file"
+                                    id="icon"
+                                    {...register("icon")}
+                                    accept="image/*"
+                                />
+                                {isEditMode && editingCategory?.icon?.secure_url && (
+                                    <img
+                                        src={editingCategory.icon.secure_url}
+                                        alt="preview"
+                                        className="w-16 h-16 mt-2 rounded border"
+                                    />
+                                )}
                             </div>
 
                             <div className="flex justify-end mt-4 gap-3">

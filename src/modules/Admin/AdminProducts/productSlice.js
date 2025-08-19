@@ -7,15 +7,14 @@ import {
 
 // 1- get all products
 export const getProducts = createAsyncThunk(
-  "products/getAll",
+  "products/getProducts",
   async (_, { rejectWithValue }) => {
     try {
       const res = await publicAxiosInstance.get(`${PRODUCTS_URLS.products}`);
-
-      console.log("Fetched products:", res.data.data.data);
-
-      return res.data.data.data;
+      console.log("Fetched products:", res.data);
+      return res.data.data.data || res.data; // حسب الباك
     } catch (err) {
+      console.error("Error fetching products:", err);
       return rejectWithValue(err.response?.data || err.message);
     }
   }

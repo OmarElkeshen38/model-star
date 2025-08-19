@@ -5,13 +5,14 @@ import {
   privateAxiosInstance,
 } from "../../../Services/Urls/Urls";
 
-
 // جلب كل الأصناف
 export const getCategories = createAsyncThunk(
   "categories/getCategories",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await publicAxiosInstance.get(`${CATEGORIES_URLS.categories}`);
+      const res = await publicAxiosInstance.get(
+        `${CATEGORIES_URLS.categories}`
+      );
       console.log("Fetched categories:", res.data);
       return res.data || res.data; // حسب الباك
     } catch (err) {
@@ -21,17 +22,36 @@ export const getCategories = createAsyncThunk(
   }
 );
 
-
 // إضافة صنف جديد
 export const addCategory = createAsyncThunk(
   "categories/addCategory",
   async (categoryData, { rejectWithValue }) => {
     try {
-      const res = await privateAxiosInstance.post(`${CATEGORIES_URLS.create}`, categoryData);
+      const formData = new FormData();
+
+      // أضف باقي الحقول
+      formData.append("name_en", categoryData.name_en);
+      formData.append("name_ar", categoryData.name_ar);
+
+      // أضف الصورة (لو موجودة)
+      if (categoryData.icon && categoryData.icon[0]) {
+        formData.append("icon", categoryData.icon[0]);
+      }
+
+      const res = await privateAxiosInstance.post(
+        `${CATEGORIES_URLS.create}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
       console.log("Created category:", res.data);
       return res.data.data || res.data;
     } catch (err) {
-        console.error("Error adding category:", err);
+      console.error("Error adding category:", err);
       return rejectWithValue(err.response?.data || err.message);
     }
   }
@@ -42,7 +62,15 @@ export const updateCategory = createAsyncThunk(
   "categories/updateCategory",
   async ({ id, data }, { rejectWithValue }) => {
     try {
-      const res = await privateAxiosInstance.put(`${CATEGORIES_URLS.categories}/${id}`, data);
+      const res = await privateAxiosInstance.put(
+        `${CATEGORIES_URLS.update}/${id}`,
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       return res.data.data || res.data;
     } catch (err) {
       return rejectWithValue(err.response?.data || err.message);
@@ -62,7 +90,6 @@ export const deleteCategory = createAsyncThunk(
     }
   }
 );
-
 
 const categorySlice = createSlice({
   name: "categories",

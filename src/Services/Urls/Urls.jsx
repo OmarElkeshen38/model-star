@@ -34,10 +34,10 @@ export const PRODUCTS_URLS = {
 
 export const CATEGORIES_URLS = {
   categories: `categories/all`,
-  create: `admin/create_categories`,
-  update: (id) => `admin/update_categories/${id}`,
-  delete: (id) => `admin/delete_categories/${id}`,
-  product_details: (id) => `admin/get_categories/${id}`,
+  create: `admin/create_category`,
+  update: (id) => `admin/update_category/${id}`,
+  delete: (id) => `admin/delete_category/${id}`,
+  product_details: (id) => `categories/${id}`,
 }
 
 
