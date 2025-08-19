@@ -24,27 +24,6 @@ function AdminSettings() {
       <h1 className="text-2xl font-bold text-gray-800 mb-6">إعدادات الموقع</h1>
 
       <div className="bg-white shadow rounded-lg p-6 space-y-6">
-        {/* إعدادات عامة */}
-        <div>
-          <h2 className="text-lg font-semibold mb-4">الإعدادات العامة</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input
-              type="text"
-              placeholder="اسم الموقع"
-              value={settings.siteName}
-              onChange={(e) => handleChange("siteName", e.target.value)}
-              className="border p-2 rounded"
-            />
-            <input
-              type="text"
-              placeholder="رابط الشعار"
-              value={settings.logoUrl}
-              onChange={(e) => handleChange("logoUrl", e.target.value)}
-              className="border p-2 rounded"
-            />
-          </div>
-        </div>
-
         {/* إعدادات التواصل */}
         <div>
           <h2 className="text-lg font-semibold mb-4">إعدادات التواصل</h2>

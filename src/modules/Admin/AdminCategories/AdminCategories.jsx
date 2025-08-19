@@ -11,6 +11,7 @@ import { FiEdit, FiTrash2, FiPlus } from "react-icons/fi";
 import ModalConfirm from "../../Shared/ModalConfirm/ModalConfirm";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import Loading from "../../Shared/Loading/Loading";
 
 export default function AdminCategories() {
     const dispatch = useDispatch();
@@ -42,10 +43,6 @@ export default function AdminCategories() {
     const startIndex = (page - 1) * limit;
     const currentCategories = categories.slice(startIndex, startIndex + limit);
 
-    if (!categories || categories.length === 0) {
-        return <p>لا يوجد تصنيفات</p>;
-    }
-
     // فتح المودال (إضافة/تعديل)
     const handleOpenModal = (category = null) => {
         if (category) {
@@ -64,36 +61,9 @@ export default function AdminCategories() {
 
     // حفظ الصنف
     const onSubmit = (data) => {
-  const formData = new FormData();
-  formData.append("name_ar", data.name_ar);
-  formData.append("name_en", data.name_en);
+        console.log(data);
 
-  // لو اختار صورة جديدة
-  if (data.icon && data.icon[0]) {
-    formData.append("icon", data.icon[0]);
-  }
-
-  if (isEditMode && editingCategory) {
-    dispatch(updateCategory({ id: editingCategory._id, data: formData }))
-      .unwrap()
-      .then(() => {
-        dispatch(getCategories());
-        toast.success("تم تحديث الصنف بنجاح");
-        setShowModal(false);
-      })
-      .catch(() => toast.error("حدث خطأ أثناء التحديث"));
-  } else {
-    dispatch(addCategory(formData))
-      .unwrap()
-      .then(() => {
-        dispatch(getCategories());
-        toast.success("تم إضافة الصنف بنجاح");
-        setShowModal(false);
-      })
-      .catch(() => toast.error("حدث خطأ أثناء الإضافة"));
-  }
-};
-
+    };
 
 
     // حذف الصنف
@@ -111,7 +81,7 @@ export default function AdminCategories() {
     };
 
     return (
-        <div className="p-8 bg-gray-50 min-h-screen">
+        <div className="p-6 min-h-screen">
             {/* Header */}
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-extrabold text-gray-800 flex items-center gap-2">
@@ -125,62 +95,67 @@ export default function AdminCategories() {
                 </button>
             </div>
 
-            {loading && <p className="text-gray-600">⏳ جاري التحميل...</p>}
-
             {/* Table */}
             <div className="overflow-x-auto bg-white rounded-xl shadow-lg">
-                <table className="w-full border-collapse text-sm">
-                    <thead className="bg-gray-100 text-gray-700 text-left">
-                        <tr>
-                            <th className="p-3">#</th>
-                            <th className="p-3">الصورة</th>
-                            <th className="p-3">الاسم</th>
-                            <th className="p-3">الاسم (EN)</th>
-                            <th className="p-3 text-center">الإجراءات</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {currentCategories.map((category, idx) => (
-                            <tr
-                                key={category._id}
-                                className="border-b hover:bg-gray-50 transition text-center"
-                            >
-                                <td className="p-3">{startIndex + idx + 1}</td>
-                                <td className="p-3 flex justify-center">
-                                    <img
-                                        src={category.icon?.secure_url || "/placeholder.png"}
-                                        alt={category.name_en}
-                                        className="w-14 h-14 object-cover rounded-md shadow-sm"
-                                    />
-                                </td>
-                                <td className="p-3 font-medium text-gray-800">
-                                    {category.name_ar}
-                                </td>
-                                <td className="p-3 text-gray-600">{category.name_en}</td>
-                                <td className="p-3 flex justify-center gap-3">
-                                    <button
-                                        onClick={() => handleOpenModal(category)}
-                                        className="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md shadow transition"
+                {loading ? (
+                    <Loading />
+                ) : (
+                    <>
+                        <table className="w-full border-collapse text-sm">
+                            <thead className="bg-gray-200 text-gray-700 text-center">
+                                <tr>
+                                    <th className="p-3">#</th>
+                                    <th className="p-3">الصورة</th>
+                                    <th className="p-3">الاسم</th>
+                                    <th className="p-3">الاسم (EN)</th>
+                                    <th className="p-3 text-center">الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {currentCategories.map((category, idx) => (
+                                    <tr
+                                        key={category._id}
+                                        className="border-b hover:bg-gray-50 transition text-center font-semibold"
                                     >
-                                        <FiEdit />
-                                    </button>
-                                    <button
-                                        onClick={() => handleDelete(category._id)}
-                                        className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-md shadow transition"
-                                    >
-                                        <FiTrash2 />
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                                        <td className="p-3">{startIndex + idx + 1}</td>
+                                        <td className="p-3 flex justify-center">
+                                            <img
+                                                src={category.icon?.secure_url || "/placeholder.png"}
+                                                alt={category.name_en}
+                                                className="w-14 h-14 object-cover rounded-md shadow-sm"
+                                            />
+                                        </td>
+                                        <td className="p-3 font-medium text-gray-800">
+                                            {category.name_ar}
+                                        </td>
+                                        <td className="p-3 text-gray-600">{category.name_en}</td>
+                                        <td className="p-3 flex justify-center gap-3">
+                                            <button
+                                                onClick={() => handleOpenModal(category)}
+                                                className="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md shadow transition"
+                                            >
+                                                <FiEdit />
+                                            </button>
+                                            <button
+                                                onClick={() => handleDelete(category._id)}
+                                                className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-md shadow transition"
+                                            >
+                                                <FiTrash2 />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
 
-                <Pagination
-                    currentPage={page}
-                    totalPages={totalPages}
-                    onPageChange={(p) => setPage(p)}
-                />
+                        <Pagination
+                            currentPage={page}
+                            totalPages={totalPages}
+                            onPageChange={(p) => setPage(p)}
+                        />
+                    </>
+                )}
+
             </div>
 
             {/* Overlay */}
@@ -225,19 +200,7 @@ export default function AdminCategories() {
                                 <label htmlFor="icon" className="mb-1 text-sm font-semibold text-indigo-600">
                                     أيقونة الصنف
                                 </label>
-                                <input
-                                    type="file"
-                                    id="icon"
-                                    {...register("icon")}
-                                    accept="image/*"
-                                />
-                                {isEditMode && editingCategory?.icon?.secure_url && (
-                                    <img
-                                        src={editingCategory.icon.secure_url}
-                                        alt="preview"
-                                        className="w-16 h-16 mt-2 rounded border"
-                                    />
-                                )}
+
                             </div>
 
                             <div className="flex justify-end mt-4 gap-3">

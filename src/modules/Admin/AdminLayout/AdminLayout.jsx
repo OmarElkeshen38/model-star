@@ -1,9 +1,13 @@
 import React from 'react';
-import { Link, Outlet, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Package, Users, ShoppingCart, Settings, ChartBarStacked } from 'lucide-react';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { LayoutDashboard, Package, Users, ShoppingCart, Settings, ChartBarStacked, LogOut } from 'lucide-react';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../Authentication/authSlice';
 
 function AdminLayout() {
     const location = useLocation();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const links = [
         { to: '/admin', label: 'لوحة التحكم', icon: <LayoutDashboard size={18} /> },
@@ -13,6 +17,11 @@ function AdminLayout() {
         { to: '/admin/users', label: 'المستخدمون', icon: <Users size={18} /> },
         { to: '/admin/settings', label: 'الإعدادات', icon: <Settings size={18} /> },
     ];
+
+    function handleLogout() {
+        dispatch(logout());
+        navigate('/auth/login');
+    }
 
     return (
         <div className="min-h-screen flex bg-gray-100">
@@ -32,6 +41,7 @@ function AdminLayout() {
                             </Link>
                         </li>
                     ))}
+                    <li><button onClick={handleLogout} className="flex items-center gap-2 px-4 py-2 rounded-md font-medium transition hover:bg-indigo-50 text-gray-700"><LogOut size={18} /> تسجيل الخروج</button></li>
                 </ul>
             </aside>
 

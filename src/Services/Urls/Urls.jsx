@@ -40,6 +40,15 @@ export const CATEGORIES_URLS = {
   product_details: (id) => `categories/${id}`,
 }
 
+export const USERS_URLS = {
+  users: `admin/get_users`,
+  create: `admin/create_user`,
+  update: (id) => `admin/update_user/${id}`,
+  update_role: (id) => `admin/update_userrole/${id}`,
+  delete: (id) => `admin/delete_user/${id}`,
+  user_details: (id) => `users/${id}`,
+}
+
 
 export const AUTH_URLS = {
   signup: `auth/signup`,
