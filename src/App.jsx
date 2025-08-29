@@ -63,6 +63,7 @@ function App() {
         },
         { path: "products", element: <AllProducts /> },
         { path: "/product/:id", element: <ProductDetails /> },
+        
         { path: "contact", element: <ContactUs /> },
         { path: "about", element: <AboutUs /> },
 

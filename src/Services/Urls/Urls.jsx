@@ -26,10 +26,15 @@ export default privateAxiosInstance;
 
 export const PRODUCTS_URLS = {
   products: `products/getproducts`,
+  products_by_category: (categoryId) => `products/bycategory/${categoryId}`,
   create: `admin/create_products`,
   update: (id) => `admin/update_products/${id}`,
   delete: (id) => `admin/delete_products/${id}`,
   product_details: (id) => `admin/get_product/${id}`,
+}
+
+export const OFFERS_PRODUCTS = {
+  offers: 'offers/products-with-offers',
 }
 
 export const CATEGORIES_URLS = {

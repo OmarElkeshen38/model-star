@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { ChevronDown, ShoppingCart, User } from 'lucide-react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { getCategories } from '../../Admin/AdminCategories/categorySlice';
 
 function Navbar() {
   const { t, i18n } = useTranslation();
@@ -12,6 +13,12 @@ function Navbar() {
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
+  const { items: categories } = useSelector((state) => state.categories);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getCategories());
+  }, [dispatch]);
 
   useEffect(() => {
     const dir = i18n.language === 'ar' ? 'rtl' : 'ltr';
@@ -32,15 +39,8 @@ function Navbar() {
   const toggleDropdown = () => setShowDropdown(prev => !prev);
   const changeLanguage = (lang) => i18n.changeLanguage(lang);
 
-  const categories = [
-    { name: t('categories.shoes'), slug: 'mens-shoes' },
-    { name: t('categories.womens-clothing'), slug: 'womens-clothing' },
-    { name: t('categories.mens-clothing'), slug: 'mens-clothing' },
-  ];
-
   const handleClick = () => {
     if (!user) {
-      // لو مش لوج إن
       navigate("/auth/login");
     } else if (user.role === "admin") {
       navigate("/admin");
@@ -69,6 +69,7 @@ function Navbar() {
             </NavLink>
           </li>
 
+          {/* Shop Dropdown */}
           <li className="relative" ref={dropdownRef}>
             <button
               onClick={toggleDropdown}
@@ -77,21 +78,25 @@ function Navbar() {
               {t('nav.shop')} <ChevronDown />
             </button>
             {showDropdown && (
-              <ul className="absolute bg-white shadow-md rounded-md mt-2 w-48 text-sm text-gray-800 z-50">
-                {categories.map((cat) => (
-                  <li key={cat.slug}>
-                    <Link
-                      to={`/shop/${cat.slug}`}
-                      className="block px-4 py-2 hover:bg-gray-100 transition"
-                      onClick={() => {
-                        setMenuOpen(false);
-                        setShowDropdown(false);
-                      }}
-                    >
-                      {cat.name}
-                    </Link>
-                  </li>
-                ))}
+              <ul className="absolute bg-white shadow-md rounded-md mt-2 w-48 text-sm text-gray-800 z-50 max-h-64 overflow-y-auto">
+                {categories.length > 0 ? (
+                  categories.map((cat) => (
+                    <li key={cat._id}>
+                      <Link
+                        to={`/products?category=${cat._id}`}
+                        className="block px-4 py-2 hover:bg-gray-100 transition"
+                        onClick={() => {
+                          setMenuOpen(false);
+                          setShowDropdown(false);
+                        }}
+                      >
+                        {cat.name_ar}
+                      </Link>
+                    </li>
+                  ))
+                ) : (
+                  <li className="px-4 py-2 text-gray-500">{t("common.noCategories")}</li>
+                )}
               </ul>
             )}
           </li>
