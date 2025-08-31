@@ -17,8 +17,8 @@ function Home() {
             <CategoriesSlider />
             <Features />
             <FeaturedProducts />
-            <ExclusiveOffers />
             <PromoBanner />
+            <ExclusiveOffers />
             <Cta />
         </>
     )

@@ -38,7 +38,7 @@ function CategoriesSlider() {
                     spaceBetween={20}
                     slidesPerView={2}
                     loop={true}
-                    autoplay={{ delay: 3000, disableOnInteraction: false }}
+                    autoplay={{ delay: 4000, disableOnInteraction: false }}
                     navigation
                     // pagination={{ clickable: true }}
                     breakpoints={{
