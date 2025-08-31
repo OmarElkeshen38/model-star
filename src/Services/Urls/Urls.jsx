@@ -30,7 +30,7 @@ export const PRODUCTS_URLS = {
   create: `admin/create_products`,
   update: (id) => `admin/update_products/${id}`,
   delete: (id) => `admin/delete_products/${id}`,
-  product_details: (id) => `admin/get_product/${id}`,
+  product_details: (id) => `products/getbyid/${id}`,
 }
 
 export const OFFERS_PRODUCTS = {
