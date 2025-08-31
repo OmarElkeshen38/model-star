@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // export const baseURL = "http://168.231.104.227:3000/";
-export const baseURL = "https://wwww.modelstar-eg.com:api/";
+export const baseURL = "https://wwww.modelstar-eg.com/api/";
 
 export const publicAxiosInstance = axios.create({ baseURL });
 
