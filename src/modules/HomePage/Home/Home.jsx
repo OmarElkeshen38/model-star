@@ -15,10 +15,10 @@ function Home() {
         <>
             <Header />
             <CategoriesSlider />
+            <Features />
             <FeaturedProducts />
             <ExclusiveOffers />
             <PromoBanner />
-            <Features />
             <Cta />
         </>
     )

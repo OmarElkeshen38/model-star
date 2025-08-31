@@ -1,93 +1,103 @@
-import React from 'react';
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ShoppingCart } from "lucide-react";
-import shoiceImg from '../../../assets/shoice.jpg';
+import { useDispatch, useSelector } from "react-redux";
+import { getOffersProducts } from "./offersSlice";
+import Loading from "../../Shared/Loading/Loading";
 
 function FeaturedProducts() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const featuredProducts = [
-    {
-      id: 1,
-      name: "حذاء رياضي رجالي",
-      price: "699 ج.م",
-      image: shoiceImg,
-    },
-    {
-      id: 2,
-      name: "حذاء كاجوال نسائي",
-      price: "549 ج.م",
-      image: shoiceImg,
-    },
-    {
-      id: 3,
-      name: "حذاء أطفال مريح",
-      price: "299 ج.م",
-      image: shoiceImg,
-    },
-    {
-      id: 4,
-      name: "حذاء جلدي رسمي",
-      price: "799 ج.م",
-      image: shoiceImg,
-    },
-  ];
+  const { items: products, loading } = useSelector((state) => state.offers);
+
+  useEffect(() => {
+    dispatch(getOffersProducts());
+  }, [dispatch]);
 
   return (
-   <section className="py-20 bg-gray-100">
-  <div className="container mx-auto px-6">
-    <h2 className="text-3xl font-bold text-center text-indigo-700 mb-12">
-      {t("home.featured.title", "الاكثر مبيعاً")}
-    </h2>
+    <section className="py-20 bg-gray-100">
+      <div className="container mx-auto px-6">
+        <h2 className="text-3xl font-bold text-center text-indigo-700 mb-12">
+          {t("home.exclusiveOffers.title", "عروض حصرية")}
+        </h2>
 
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-      {featuredProducts.map((product, index) => (
-        <div
-          key={product.id}
-          className="bg-white overflow-hidden rounded-lg flex flex-col justify-between shadow transition duration-300 hover:shadow-lg hover:-translate-y-1 animate-fade-in"
-          style={{ animationDelay: `${index * 100}ms`, animationFillMode: "both" }}
-        >
-          <img
-            src={product.image}
-            alt={product.name}
-            className="w-full h-60 object-cover rounded-t-md transition duration-300 hover:scale-105"
-          />
-          <div className="p-4 text-center flex flex-col gap-2">
-            <h3 className="text-lg font-semibold text-gray-800">{product.name}</h3>
-            <p className="text-indigo-600 font-bold">{product.price}</p>
+        {loading ? (
+          <Loading />
+        ) : products.length === 0 ? (
+          <p className="text-center text-gray-500">
+            لا توجد منتجات عليها عروض حالياً
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+            {products.map((product, index) => {
+              const image = product.images?.[0]?.secure_url;
+              const price = product.Price;
+              const discountedPrice = product.currentPrice;
 
-            <div className="flex justify-center gap-3">
-              <Link
-                to={`/product/${product.id}`}
-                className="text-sm text-indigo-600 hover:underline"
-              >
-                {t("home.featured.details", "عرض التفاصيل")}
-              </Link>
+              return (
+                <div
+                  key={product._id}
+                  className="overflow-hidden rounded-lg shadow transition duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer flex flex-col items-center p-6"
+                  style={{
+                    animationDelay: `${index * 100}ms`,
+                    animationFillMode: "both",
+                  }}
+                  onClick={() => navigate(`/product/${product._id}`)}
+                >
+                  {/* صورة دائرية مع hover effect */}
+                  <div className="w-56 h-56 rounded-full overflow-hidden mb-4 transition-transform duration-300 hover:scale-110">
+                    <img
+                      src={image}
+                      alt={i18n.language === "ar" ? product.name_ar : product.name_en}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
 
-              <button
-                className="text-white bg-indigo-600 hover:bg-indigo-700 px-3 py-1 rounded flex items-center gap-1 text-sm transition"
-              >
-                <ShoppingCart size={16} />
-                {t("nav.cart", "السلة")}
-              </button>
-            </div>
+                  {/* اسم المنتج و أيقونة السلة */}
+                  <div className="flex items-center justify-between w-full px-8 mb-3 mt-2">
+                    <h3 className="text-lg font-semibold text-gray-800 truncate">
+                      {i18n.language === "ar" ? product.name_ar : product.name_en}
+                    </h3>
+                    <button
+                      className="text-indigo-600 hover:text-indigo-800 transition"
+                      onClick={(e) => {
+                        e.stopPropagation(); // عشان ما يروحش لصفحة التفاصيل عند الضغط
+                        console.log("Add to cart:", product._id);
+                      }}
+                    >
+                      <ShoppingCart size={22} />
+                    </button>
+                  </div>
+
+                  {/* السعر */}
+                  <div className="flex flex-col items-center gap-1">
+                    <span className="text-gray-500 line-through text-sm">
+                      {price} ج.م
+                    </span>
+                    <span className="text-indigo-600 font-bold text-lg">
+                      {discountedPrice} ج.م
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
           </div>
+        )}
+
+        {/* زر عرض كل المنتجات */}
+        <div className="mt-10 text-center">
+          <Link
+            to="/shop"
+            className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg text-lg font-medium transition-transform hover:scale-105"
+          >
+            {t("home.featured.viewAll", "عرض كل المنتجات")}
+          </Link>
         </div>
-      ))}
-    </div>
-
-    <div className="mt-6 text-center">
-      <Link
-        to="/shop"
-        className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg text-lg font-medium transition-transform hover:scale-105"
-      >
-        {t("home.featured.viewAll", "عرض كل المنتجات")}
-      </Link>
-    </div>
-  </div>
-</section>
-
+      </div>
+    </section>
   );
 }
 
