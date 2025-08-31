@@ -7,12 +7,13 @@ import {
   publicAxiosInstance,
 } from "../../../Services/Urls/Urls";
 import Pagination from "../../Shared/Pagination/Pagination";
+import { ShoppingCart, Star } from "lucide-react";
 
 function AllProducts() {
   const [productsList, setProductsList] = useState([]);
   const [categoriesList, setCategoriesList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [page, setPage] = useState(1); // ⬅️ الصفحة الحالية
+  const [page, setPage] = useState(1);
 
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ function AllProducts() {
   const initialCategory = searchParams.get("category") || "all";
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
 
-  const productsPerPage = 6; // ⬅️ عدد المنتجات في الصفحة
+  const productsPerPage = 8;
 
   function goToProductDetails(productId) {
     navigate(`/product/${productId}`);
@@ -56,6 +57,10 @@ function AllProducts() {
         let response = await publicAxiosInstance.get(
           PRODUCTS_URLS.products_by_category(categoryId)
         );
+
+        // ✅ تأكد من إنك بتشوف الداتا راجعة صح
+        console.log("Products by category:", response?.data);
+
         setProductsList(response?.data?.data?.data || []);
       }
     } catch (error) {
@@ -64,6 +69,7 @@ function AllProducts() {
       setIsLoading(false);
     }
   };
+
 
   const handleCategoryChange = (categoryId) => {
     setSelectedCategory(categoryId);
@@ -77,7 +83,6 @@ function AllProducts() {
     productsByCategory(initialCategory);
   }, [initialCategory]);
 
-  // 🟢 Pagination logic
   const totalPages = Math.ceil(productsList.length / productsPerPage);
   const paginatedProducts = productsList.slice(
     (page - 1) * productsPerPage,
@@ -85,41 +90,38 @@ function AllProducts() {
   );
 
   return (
-    <div className="container mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold text-indigo-700 my-10 text-center">
+    <div className="container mx-auto px-4 py-14">
+      <h1 className="text-3xl font-extrabold text-indigo-700 mb-10 text-center">
         {t("nav.products")}
       </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
         {/* Sidebar */}
         <aside className="md:col-span-1">
-          <div className="bg-white p-5 shadow-lg rounded-xl border border-gray-100">
-            <h3 className="text-xl font-semibold mb-4 text-gray-800">
+          <div className="bg-white p-5 shadow-xl rounded-2xl border border-gray-100 sticky top-24">
+            <h3 className="text-xl font-semibold mb-5 text-gray-900">
               {t("nav.shop")}
             </h3>
             <ul className="space-y-2">
               <li>
                 <button
                   onClick={() => handleCategoryChange("all")}
-                  className={`w-full text-start px-4 py-2 rounded-md transition font-medium ${
-                    selectedCategory === "all"
-                      ? "bg-indigo-600 text-white"
+                  className={`w-full text-start px-4 py-2 rounded-lg transition font-medium ${selectedCategory === "all"
+                      ? "bg-indigo-600 text-white shadow-md"
                       : "text-gray-800 hover:bg-gray-100"
-                  }`}
+                    }`}
                 >
                   {i18n.language === "ar" ? "الكل" : "All"}
                 </button>
               </li>
-
               {categoriesList.map((cat) => (
                 <li key={cat._id}>
                   <button
                     onClick={() => handleCategoryChange(cat._id)}
-                    className={`w-full text-start px-4 py-2 rounded-md transition font-medium ${
-                      selectedCategory === cat._id
-                        ? "bg-indigo-600 text-white"
+                    className={`w-full text-start px-4 py-2 rounded-lg transition font-medium ${selectedCategory === cat._id
+                        ? "bg-indigo-600 text-white shadow-md"
                         : "text-gray-800 hover:bg-gray-100"
-                    }`}
+                      }`}
                   >
                     {i18n.language === "ar" ? cat.name_ar : cat.name_en}
                   </button>
@@ -133,43 +135,84 @@ function AllProducts() {
         <section className="md:col-span-3">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {isLoading ? (
-              <div className="col-span-3 text-center py-10">
-                <p className="text-indigo-600 text-4xl">
-                  <i className="fa-solid fa-spinner animate-spin"></i>
-                </p>
+              <div className="col-span-3 text-center py-12">
+                <i className="fa-solid fa-spinner animate-spin text-indigo-600 text-4xl"></i>
               </div>
             ) : paginatedProducts.length === 0 ? (
-              <div className="col-span-3 text-center py-10">
-                <p className="text-gray-600 text-lg">
-                  {i18n.language === "ar"
-                    ? "لا يوجد منتجات في هذا التصنيف"
-                    : "No products found in this category"}
-                </p>
+              <div className="col-span-3 text-center py-12 text-gray-600">
+                {i18n.language === "ar"
+                  ? "لا يوجد منتجات في هذا التصنيف"
+                  : "No products found in this category"}
               </div>
             ) : (
               paginatedProducts.map((product) => (
                 <div
-                  onClick={() => goToProductDetails(product._id)}
                   key={product._id}
-                  className="bg-white cursor-pointer rounded-xl border border-gray-100 shadow-md overflow-hidden hover:shadow-lg hover:-translate-y-1 transition duration-300 flex flex-col"
+                  onClick={() => goToProductDetails(product._id)}
+                  className="group bg-white rounded-2xl border border-gray-100 shadow-md overflow-hidden hover:shadow-lg hover:-translate-y-1 transition duration-300 cursor-pointer flex flex-col"
                 >
-                  <img
-                    src={product.images?.[0]?.secure_url}
-                    alt={product.name_ar}
-                    className="w-full h-52 object-cover"
-                  />
-                  <div className="p-5 text-center flex flex-col justify-between gap-2 flex-grow">
-                    <h3 className="text-lg font-semibold text-gray-800">
-                      {product.name_ar}
+                  {/* Image with overlay */}
+                  <div className="relative overflow-hidden">
+                    <img
+                      src={product.images?.[0]?.secure_url}
+                      alt={product.name_ar}
+                      className="w-full h-60 object-cover transform group-hover:scale-110 transition duration-500"
+                    />
+                    <button
+                      className="absolute bottom-3 right-3 bg-indigo-600 hover:bg-indigo-700 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        console.log("Add to cart:", product._id);
+                      }}
+                    >
+                      <ShoppingCart size={18} />
+                    </button>
+                  </div>
+
+                  {/* Details */}
+                  <div className="p-5 flex flex-col gap-2 flex-grow">
+                    <h3 className="text-lg font-semibold text-gray-900 truncate">
+                      {i18n.language === "ar"
+                        ? product.name_ar
+                        : product.name_en}
                     </h3>
-                    <p className="text-indigo-600 font-bold text-base">
-                      {product.price} ج.م
-                    </p>
-                    <div className="flex justify-center gap-3 mt-3">
-                      <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1.5 rounded-md text-sm font-medium transition">
-                        {t("products.cart", "أضف إلى السلة")}{" "}
-                        <i className="fa-solid fa-cart-shopping mx-3"></i>
-                      </button>
+
+                    {/* Price with discount */}
+                    {product.discountPercentage > 0 ? (
+                      <div className="flex items-center gap-2 justify-center">
+                        <span className="text-red-600 font-bold text-lg">
+                          {product.currentPrice} ج.م
+                        </span>
+                        <span className="line-through text-gray-500 text-sm">
+                          {product.Price} ج.م
+                        </span>
+                        <span className="bg-red-100 text-red-600 text-xs font-semibold px-2 py-0.5 rounded-full">
+                          -{product.discountPercentage}%
+                        </span>
+                      </div>
+                    ) : (
+                      <p className="text-indigo-600 font-bold text-lg">
+                        {product.currentPrice} ج.م
+                      </p>
+                    )}
+
+                    {/* Rating */}
+                    <div className="flex justify-center gap-1 text-yellow-400 mt-1">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          size={16}
+                          fill={
+                            i < product.ratingStats?.averageRating
+                              ? "currentColor"
+                              : "none"
+                          }
+                          className={`${i < product.ratingStats?.averageRating
+                              ? "text-yellow-400"
+                              : "text-gray-300"
+                            }`}
+                        />
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -177,13 +220,15 @@ function AllProducts() {
             )}
           </div>
 
-          {/* 🟢 Pagination */}
+          {/* Pagination */}
           {totalPages > 1 && (
-            <Pagination
-              currentPage={page}
-              totalPages={totalPages}
-              onPageChange={(p) => setPage(p)}
-            />
+            <div className="mt-10">
+              <Pagination
+                currentPage={page}
+                totalPages={totalPages}
+                onPageChange={(p) => setPage(p)}
+              />
+            </div>
           )}
         </section>
       </div>
