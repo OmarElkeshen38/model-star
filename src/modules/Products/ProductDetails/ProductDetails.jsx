@@ -5,6 +5,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay, Pagination } from "swiper/modules";
 import { ShoppingCart, Star, Tag } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { useReducedMotion } from "framer-motion";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -15,7 +16,10 @@ import {
 
 function ProductDetails() {
     const { id } = useParams();
-    const { i18n } = useTranslation();
+    const { i18n, t } = useTranslation();
+    const isRTL = i18n.dir() === "rtl";
+    const reduceMotion = useReducedMotion();
+
     const [product, setProduct] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [selectedSize, setSelectedSize] = useState(null);
@@ -28,15 +32,41 @@ function ProductDetails() {
         reset,
     } = useForm();
 
-    const getProductDetails = async () => {
+    // Chic Teal inline palette (no tailwind.config)
+    const COLORS = {
+        primary: "#0B132B",
+        accent: "#06B6D4",
+        accentDark: "#0585A3",
+        accent2: "#FF6B6B",
+        softBg: "#F8FAFC",
+        muted: "#6B7280",
+    };
+
+    const formatPrice = (v) => {
+        if (v == null) return "-";
         try {
-            const res = await publicAxiosInstance.get(
-                PRODUCTS_URLS.product_details(id)
+            return Number(v).toLocaleString("ar-EG");
+        } catch {
+            return v;
+        }
+    };
+
+    const imageFallback = (e) => {
+        e.currentTarget.onerror = null;
+        e.currentTarget.src =
+            "data:image/svg+xml;utf8," +
+            encodeURIComponent(
+                `<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600' fill='none'><rect width='100%' height='100%' fill='${COLORS.softBg}'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='${COLORS.muted}' font-family='Arial, Helvetica, sans-serif' font-size='20'>No image</text></svg>`
             );
+    };
+
+    const getProductDetails = async () => {
+        setIsLoading(true);
+        try {
+            const res = await publicAxiosInstance.get(PRODUCTS_URLS.product_details(id));
             const prod = res?.data?.data?.data || null;
             setProduct(prod);
 
-            // جلب منتجات مشابهة (نفس التصنيف مثلًا)
             if (prod?.category?._id) {
                 const relatedRes = await publicAxiosInstance.get(
                     PRODUCTS_URLS.products_by_category(prod.category._id)
@@ -44,9 +74,13 @@ function ProductDetails() {
                 setRelatedProducts(
                     relatedRes?.data?.data?.data?.filter((p) => p._id !== prod._id) || []
                 );
+            } else {
+                setRelatedProducts([]);
             }
         } catch (err) {
-            console.error(err);
+            console.error("getProductDetails:", err);
+            setProduct(null);
+            setRelatedProducts([]);
         } finally {
             setIsLoading(false);
         }
@@ -54,21 +88,20 @@ function ProductDetails() {
 
     useEffect(() => {
         getProductDetails();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
 
-    const renderStars = (rating, total) => (
-        <div className="flex items-center gap-1">
+    const renderStars = (rating = 0, total = 0) => (
+        <div className="flex items-center gap-2" aria-hidden>
             {Array.from({ length: 5 }, (_, i) => (
                 <Star
                     key={i}
                     size={18}
-                    className={
-                        i < Math.round(rating) ? "text-yellow-400" : "text-gray-300"
-                    }
+                    className={i < Math.round(rating) ? "text-yellow-400" : "text-gray-300"}
                     fill={i < Math.round(rating) ? "currentColor" : "none"}
                 />
             ))}
-            <span className="text-sm text-gray-600 ml-2">
+            <span style={{ color: COLORS.muted, marginInlineStart: 8 }} className="text-sm">
                 {total} {i18n.language === "ar" ? "تقييم" : "reviews"}
             </span>
         </div>
@@ -79,83 +112,103 @@ function ProductDetails() {
         reset();
     };
 
+    const addToCart = () => {
+        // Replace with real addToCart logic (dispatch / API)
+        console.log("Add to cart:", product?._id, { size: selectedSize || null });
+        alert(t("product.addedToCart", "تمت إضافة المنتج إلى السلة"));
+    };
+
     if (isLoading) {
         return (
-            <div className="h-[60vh] flex justify-center items-center">
-                <i className="fa-solid fa-spinner animate-spin text-indigo-600 text-4xl"></i>
+            <div className="h-[60vh] flex justify-center items-center" aria-busy="true">
+                <svg className="animate-spin" width="44" height="44" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="10" stroke={COLORS.accent} strokeWidth="4" strokeOpacity="0.25" />
+                    <path d="M22 12a10 10 0 00-10-10" stroke={COLORS.accent} strokeWidth="4" strokeLinecap="round" />
+                </svg>
             </div>
         );
     }
 
     if (!product) {
         return (
-            <div className="text-center py-20 text-gray-500">
-                {i18n.language === "ar"
-                    ? "لم يتم العثور على المنتج"
-                    : "Product not found"}
+            <div className="text-center py-20" style={{ color: COLORS.muted }}>
+                {i18n.language === "ar" ? "لم يتم العثور على المنتج" : "Product not found"}
             </div>
         );
     }
 
     return (
-        <div className="container mx-auto px-6 py-14">
-            {/* تفاصيل المنتج */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 bg-white rounded-2xl shadow-lg p-8 hover:shadow-2xl transition">
-                {/* الصور */}
+        <div className="container mx-auto px-6 py-14" dir={isRTL ? "rtl" : "ltr"}>
+            <div
+                className="grid grid-cols-1 md:grid-cols-2 gap-10 bg-white rounded-2xl shadow-lg p-6 transition"
+                style={{ borderColor: `${COLORS.primary}10` }}
+            >
+                {/* Images */}
                 <div>
                     <Swiper
-                        modules={[Navigation, Autoplay]}
+                        modules={[Navigation, Autoplay, Pagination]}
                         navigation
+                        pagination={!reduceMotion ? { clickable: true } : false}
                         loop={true}
-                        autoplay={{ delay: 4000, disableOnInteraction: false }}
+                        autoplay={reduceMotion ? false : { delay: 4000, disableOnInteraction: false }}
                         className="rounded-xl overflow-hidden"
+                        dir={isRTL ? "rtl" : "ltr"}
                     >
-                        {product.images?.map((img, i) => (
-                            <SwiperSlide key={i}>
-                                <img
-                                    src={img.secure_url}
-                                    alt={product.name_ar}
-                                    className="w-full h-[400px] object-cover transform hover:scale-105 transition duration-300"
-                                />
-                            </SwiperSlide>
-                        ))}
+                        {(product.images && product.images.length > 0 ? product.images : [{ secure_url: "" }]).map(
+                            (img, i) => (
+                                <SwiperSlide key={i}>
+                                    <img
+                                        src={img?.secure_url || ""}
+                                        alt={i18n.language === "ar" ? product.name_ar : product.name_en}
+                                        className="w-full h-[420px] object-cover"
+                                        onError={imageFallback}
+                                        loading="lazy"
+                                        style={{ display: "block" }}
+                                    />
+                                </SwiperSlide>
+                            )
+                        )}
                     </Swiper>
                 </div>
 
-                {/* التفاصيل */}
-                <div className="space-y-6">
-                    <h2 className="text-3xl font-extrabold text-gray-900">
+                {/* Details */}
+                <div className="space-y-5">
+                    <h2 className="text-3xl font-extrabold" style={{ color: COLORS.primary }}>
                         {i18n.language === "ar" ? product.name_ar : product.name_en}
                     </h2>
 
-                    {/* السعر */}
-                    <div className="flex items-center gap-3">
+                    {/* Price */}
+                    <div className="flex items-center gap-3 flex-wrap">
                         {product.discountPercentage > 0 ? (
                             <>
-                                <span className="text-red-600 font-bold text-3xl">
-                                    {product.currentPrice} ج.م
+                                <span className="font-bold" style={{ color: COLORS.accent, fontSize: 28 }}>
+                                    {formatPrice(product.currentPrice)} ج.م
                                 </span>
-                                <span className="line-through text-gray-500">
-                                    {product.Price} ج.م
+                                <span className="line-through" style={{ color: COLORS.muted }}>
+                                    {formatPrice(product.Price)} ج.م
                                 </span>
-                                <span className="bg-red-100 text-red-600 text-sm font-semibold px-3 py-1 rounded-full">
+                                <span
+                                    className="text-sm font-semibold px-3 py-1 rounded-full"
+                                    style={{ background: "#FFECEF", color: COLORS.accent2 }}
+                                >
                                     -{product.discountPercentage}%
                                 </span>
                             </>
                         ) : (
-                            <span className="text-indigo-600 font-bold text-3xl">
-                                {product.currentPrice} ج.م
+                            <span className="font-bold" style={{ color: COLORS.accent, fontSize: 28 }}>
+                                {formatPrice(product.currentPrice)} ج.م
                             </span>
                         )}
                     </div>
 
-                    {/* العروض */}
+                    {/* Offers */}
                     {product.offers?.length > 0 && (
                         <div className="flex flex-wrap gap-2">
                             {product.offers.map((offer) => (
                                 <span
                                     key={offer._id}
-                                    className="flex items-center gap-1 bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium"
+                                    className="flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium"
+                                    style={{ background: "#ECFDF5", color: "#065F46" }}
                                 >
                                     <Tag size={14} />
                                     {i18n.language === "ar" ? offer.name_ar : offer.name_en}
@@ -164,116 +217,130 @@ function ProductDetails() {
                         </div>
                     )}
 
-                    {/* الوصف */}
-                    <p className="text-gray-700 leading-relaxed">
-                        {i18n.language === "ar"
-                            ? product.description_ar
-                            : product.description_en}
-                    </p>
+                    {/* Description */}
+                    <p style={{ color: COLORS.muted }}>{i18n.language === "ar" ? product.description_ar : product.description_en}</p>
 
-                    {/* المقاسات */}
+                    {/* Sizes */}
                     {product.sizes?.length > 0 && (
                         <div>
-                            <h4 className="font-semibold mb-2 text-gray-800">
+                            <h4 className="font-semibold mb-2" style={{ color: COLORS.primary }}>
                                 {i18n.language === "ar" ? "المقاسات" : "Sizes"}
                             </h4>
                             <div className="flex gap-2 flex-wrap">
-                                {product.sizes.map((size) => (
-                                    <button
-                                        key={size}
-                                        onClick={() => setSelectedSize(size)}
-                                        className={`px-4 py-2 rounded-lg border transition ${selectedSize === size
-                                            ? "bg-indigo-600 text-white border-indigo-600"
-                                            : "border-gray-300 hover:border-indigo-600"
-                                            }`}
-                                    >
-                                        {size}
-                                    </button>
-                                ))}
+                                {product.sizes.map((size) => {
+                                    const active = selectedSize === size;
+                                    return (
+                                        <button
+                                            key={size}
+                                            onClick={() => setSelectedSize(size)}
+                                            className="px-4 py-2 rounded-lg border transition"
+                                            style={
+                                                active
+                                                    ? { background: COLORS.accent, color: "#fff", borderColor: COLORS.accent }
+                                                    : { borderColor: "#E5E7EB", color: COLORS.primary, background: "#fff" }
+                                            }
+                                            aria-pressed={active}
+                                        >
+                                            {size}
+                                        </button>
+                                    );
+                                })}
                             </div>
                         </div>
                     )}
 
-                    {/* التقييم */}
-                    {renderStars(
-                        product.ratingStats?.averageRating || 0,
-                        product.ratingStats?.totalRatings || 0
-                    )}
+                    {/* Rating */}
+                    {renderStars(product.ratingStats?.averageRating || 0, product.ratingStats?.totalRatings || 0)}
 
-                    {/* زر الإضافة للسلة */}
-                    <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-medium transition flex items-center gap-2 w-full md:w-auto">
-                        <ShoppingCart size={18} />
-                        {i18n.language === "ar" ? "أضف إلى السلة" : "Add to Cart"}
-                    </button>
+                    {/* Add to cart */}
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mt-2">
+                        <button
+                            onClick={addToCart}
+                            className="px-6 py-3 rounded-xl font-medium flex items-center gap-2 justify-center"
+                            style={{
+                                background: `linear-gradient(90deg, ${COLORS.accent}, ${COLORS.accentDark})`,
+                                color: "#fff",
+                                boxShadow: "0 10px 30px rgba(6,182,212,0.14)",
+                            }}
+                            aria-label={i18n.language === "ar" ? "أضف إلى السلة" : "Add to Cart"}
+                        >
+                            <ShoppingCart size={18} />
+                            {i18n.language === "ar" ? "أضف إلى السلة" : "Add to Cart"}
+                        </button>
+
+                        <Link
+                            to={`/checkout`}
+                            className="px-6 py-3 rounded-xl font-medium text-center"
+                            style={{
+                                background: "#fff",
+                                border: `1px solid ${COLORS.primary}10`,
+                                color: COLORS.primary,
+                            }}
+                            aria-label={i18n.language === "ar" ? "إتمام الشراء" : "Checkout"}
+                        >
+                            {i18n.language === "ar" ? "إتمام الشراء" : "Checkout"}
+                        </Link>
+                    </div>
                 </div>
             </div>
 
-            {/* التعليقات */}
-            <div className="grid md:grid-cols-2 gap-6 mt-12">
-                {/* نموذج */}
-                <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
-                    <h3 className="text-lg font-semibold mb-4 text-gray-800">
+            {/* Reviews & Add review */}
+            <div className="grid md:grid-cols-2 gap-6 mt-10">
+                <div className="bg-white p-6 rounded-xl shadow">
+                    <h3 className="text-lg font-semibold mb-4" style={{ color: COLORS.primary }}>
                         {i18n.language === "ar" ? "أضف تعليقك" : "Add your review"}
                     </h3>
-                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+
+                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" aria-label="review-form">
                         <textarea
-                            {...register("comment", { required: "يرجى كتابة تعليقك" })}
-                            placeholder={
-                                i18n.language === "ar"
-                                    ? "اكتب تعليقك هنا..."
-                                    : "Write your review..."
-                            }
+                            {...register("comment", { required: i18n.language === "ar" ? "يرجى كتابة تعليقك" : "Comment is required" })}
+                            placeholder={i18n.language === "ar" ? "اكتب تعليقك هنا..." : "Write your review..."}
                             rows={4}
-                            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            className="w-full border px-4 py-2 rounded-md focus:outline-none"
                         />
-                        {errors.comment && (
-                            <p className="text-red-500 text-sm">{errors.comment.message}</p>
-                        )}
+                        {errors.comment && <p className="text-sm" style={{ color: COLORS.accent2 }}>{errors.comment.message}</p>}
                         <button
                             type="submit"
-                            className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition"
+                            className="px-5 py-2 rounded-md"
+                            style={{
+                                background: COLORS.accent,
+                                color: "#fff",
+                            }}
                         >
                             {i18n.language === "ar" ? "إرسال" : "Submit"}
                         </button>
                     </form>
                 </div>
 
-                {/* التعليقات */}
-                <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
-                    <h3 className="text-lg font-semibold mb-4 text-gray-800">
+                <div className="bg-white p-6 rounded-xl shadow">
+                    <h3 className="text-lg font-semibold mb-4" style={{ color: COLORS.primary }}>
                         {i18n.language === "ar" ? "التقييمات" : "Reviews"}
                     </h3>
+
                     {product.reviews?.length > 0 ? (
                         <ul className="space-y-4">
                             {product.reviews.map((rev, i) => (
-                                <li
-                                    key={i}
-                                    className="border-b pb-3 flex flex-col gap-1 last:border-none"
-                                >
-                                    <p className="font-bold text-indigo-700">
-                                        {rev.user || "مستخدم"}
+                                <li key={i} className="border-b pb-3 flex flex-col gap-1">
+                                    <p className="font-bold" style={{ color: COLORS.accent }}>
+                                        {rev.user || (i18n.language === "ar" ? "مستخدم" : "User")}
                                     </p>
-                                    <p className="text-gray-700">{rev.comment || "..."}</p>
-                                    <span className="text-xs text-gray-400">
+                                    <p style={{ color: COLORS.muted }}>{rev.comment || "..."}</p>
+                                    <span className="text-xs" style={{ color: COLORS.muted }}>
                                         {new Date(rev.createdAt).toLocaleDateString()}
                                     </span>
                                 </li>
                             ))}
                         </ul>
                     ) : (
-                        <p className="text-gray-500 text-sm">
-                            {i18n.language === "ar"
-                                ? "لا توجد تعليقات بعد"
-                                : "No reviews yet"}
-                        </p>
+                        <p style={{ color: COLORS.muted }}>{i18n.language === "ar" ? "لا توجد تعليقات بعد" : "No reviews yet"}</p>
                     )}
                 </div>
             </div>
 
-            {/* المنتجات المشابهة */}
+            {/* Related products */}
             {relatedProducts.length > 0 && (
-                <div className="mt-16">
-                    <h3 className="text-2xl font-bold mb-6 text-gray-900">
+                <div className="mt-12">
+                    <h3 className="text-2xl font-bold mb-6" style={{ color: COLORS.primary }}>
                         {i18n.language === "ar" ? "منتجات مشابهة" : "Related Products"}
                     </h3>
 
@@ -282,73 +349,56 @@ function ProductDetails() {
                         spaceBetween={16}
                         slidesPerView={1}
                         loop={true}
-                        autoplay={{ delay: 4000, disableOnInteraction: false }}
-                        breakpoints={{
-                            640: { slidesPerView: 2 }, // sm
-                            768: { slidesPerView: 3 }, // md
-                            1024: { slidesPerView: 4 }, // lg
-                        }}
+                        autoplay={reduceMotion ? false : { delay: 4000, disableOnInteraction: false }}
                         navigation
-                        // pagination={{ clickable: true }}
-                        className="pb-10"
+                        pagination={!reduceMotion ? { clickable: true } : false}
+                        breakpoints={{
+                            640: { slidesPerView: 2 },
+                            768: { slidesPerView: 3 },
+                            1024: { slidesPerView: 4 },
+                        }}
+                        className="pb-6"
+                        dir={isRTL ? "rtl" : "ltr"}
                     >
                         {relatedProducts.map((item) => (
                             <SwiperSlide key={item._id}>
                                 <Link
                                     to={`/product/${item._id}`}
-                                    className="group relative bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-2xl transition-all duration-500 cursor-pointer h-full flex flex-col"
+                                    className="group relative bg-white rounded-2xl border overflow-hidden transition cursor-pointer flex flex-col"
+                                    style={{
+                                        borderColor: `${COLORS.primary}10`,
+                                        boxShadow: "0 8px 24px rgba(12,15,25,0.06)",
+                                    }}
                                 >
                                     <div className="relative overflow-hidden">
                                         <img
-                                            src={item.images?.[0]?.secure_url}
+                                            src={item.images?.[0]?.secure_url || ""}
                                             alt={i18n.language === "ar" ? item.name_ar : item.name_en}
-                                            className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110"
+                                            className={`w-full h-56 object-cover ${reduceMotion ? "" : "group-hover:scale-110 transition-transform duration-700"}`}
+                                            onError={imageFallback}
+                                            loading="lazy"
                                         />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition duration-500"></div>
-
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition" />
                                     </div>
 
-                                    <div className="p-4 flex flex-col gap-2 flex-grow">
-                                        <h3 className="text-lg font-semibold text-gray-800 line-clamp-1">
-                                            {item.name_ar}
-                                        </h3>
+                                    <div className="p-4 flex flex-col gap-2">
+                                        <h4 className="font-semibold" style={{ color: COLORS.primary }}>
+                                            {i18n.language === "ar" ? item.name_ar : item.name_en}
+                                        </h4>
 
-                                        {/* السعر */}
-                                        <div className="flex items-center gap-3">
-                                            {item.discountPercentage > 0 ? (
-                                                <>
-                                                    <span className="text-red-600 font-bold text-3xl">
-                                                        {item.currentPrice} ج.م
-                                                    </span>
-                                                    <span className="line-through text-gray-500">
-                                                        {item.Price} ج.م
-                                                    </span>
-                                                    <span className="bg-red-100 text-red-600 text-sm font-semibold px-3 py-1 rounded-full">
-                                                        -{item.discountPercentage}%
-                                                    </span>
-                                                </>
-                                            ) : (
-                                                <span className="text-indigo-600 font-bold text-3xl">
-                                                    {item.currentPrice} ج.م
+                                        {item.discountPercentage > 0 ? (
+                                            <div className="flex items-center gap-2">
+                                                <span style={{ color: COLORS.accent }} className="font-bold">
+                                                    {formatPrice(item.currentPrice)} ج.م
                                                 </span>
-                                            )}
-                                        </div>
-
-                                        {/* التقييم */}
-                                        {product.ratingStats?.averageRating > 0 ? (
-                                            <div className="flex items-center gap-1 text-yellow-500">
-                                                {Array.from(
-                                                    { length: Math.round(product.ratingStats.averageRating) },
-                                                    (_, i) => (
-                                                        <Star key={i} size={16} fill="currentColor" />
-                                                    )
-                                                )}
-                                                <span className="text-gray-500 text-sm ml-1">
-                                                    ({product.ratingStats.totalRatings})
+                                                <span className="line-through" style={{ color: COLORS.muted }}>
+                                                    {formatPrice(item.Price)} ج.م
                                                 </span>
                                             </div>
                                         ) : (
-                                            <div className="h-5"></div> // placeholder يحافظ على نفس الارتفاع
+                                            <div style={{ color: COLORS.accent }} className="font-bold">
+                                                {formatPrice(item.currentPrice)} ج.م
+                                            </div>
                                         )}
                                     </div>
                                 </Link>

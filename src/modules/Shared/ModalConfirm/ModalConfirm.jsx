@@ -9,22 +9,27 @@ function ModalConfirm({ onCancel, onConfirm }) {
     };
 
     return (
-        <div 
-            className="modal-overlay animate-modal-fade-in" 
+        <div
+            className="modal-overlay animate-modal-fade-in flex items-center justify-center"
             onClick={handleOverlayClick}
         >
-            <div className="modal-box animate-modal-scale-in">
-                <h2 className="text-lg font-bold mb-4">تأكيد الحذف</h2>
-                <p className="mb-6 text-gray-700">هل أنت متأكد أنك تريد حذف هذا المنتج؟</p>
-                <div className="flex justify-end gap-4">
+            <div className="modal-box chic-modal animate-modal-scale-in">
+                <h2 className="text-xl font-bold text-gray-800 mb-3 text-center">تأكيد الحذف</h2>
+
+                <p className="mb-6 text-gray-600 text-center leading-relaxed">
+                    هل أنت متأكد أنك تريد حذف هذا العنصر؟ هذا الإجراء لا يمكن التراجع عنه.
+                </p>
+
+                <div className="flex justify-center gap-4">
                     <button
-                        className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 transition"
+                        className="px-5 py-2 rounded-md bg-gray-200 hover:bg-gray-300 text-gray-800 transition font-medium"
                         onClick={onCancel}
                     >
                         إلغاء
                     </button>
+
                     <button
-                        className="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700 transition"
+                        className="px-5 py-2 rounded-md bg-red-600 hover:bg-red-700 text-white transition font-semibold shadow-md"
                         onClick={onConfirm}
                     >
                         حذف
@@ -32,7 +37,7 @@ function ModalConfirm({ onCancel, onConfirm }) {
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
 export default ModalConfirm;
